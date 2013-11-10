@@ -1,24 +1,33 @@
-#ifndef
+/* motor.h
+ * 
+ * Header file defines all interfaces between
+ * sonar module and the main program
+ *
+ * MAE3780 Mechatronics Final Project 2013
+ * Cornell University
+ * Derek Faust, Nicole Panega, Abdullah Sayeem
+ */
+
+//Define functions if undefined
+#ifndef SONAR_H
 #define SONAR_H
 
-//Necessary Includes
-#include <stdint.h>
+//Include standard data types
+#include <stdint.h>		
 
-//Object Declarations
-typedef struct{
-	volatile uint8_t * port;
-	volatile uint8_t * ddr;
-	volatile uint8_t * pin;
-	uint8_t pinn;
-	volatile uint16_t pulsewidth;
-	volatile uint8_t isPolling;
-} SONAR;
+// Function to initialize all sonar.
+void sonar_init();
 
-SONAR initSonar(
-	volatile uint8_t * port,
-	volatile uint8_t * ddr,
-	volatile uint8_t * pin,
-	uint8_t pinn
-	);
+// Function to retrieve distance value from one sonar or
+// an average from the two that detect and object.
+uint16_t sonar_getDistance(uint8_t sonarnum);
+
+// Function to get which region and object is detected in.
+int8_t sonar_getRegion();
+/* region [-2,2]:
+ * Far left	-2
+ * Center	 0
+ * Far Right 2
+ */
 
 #endif
