@@ -19,7 +19,8 @@
 void sonar_init();
 
 // Function to retrieve distance value from one sonar or
-// an average from the two that detect and object.
+// an average from multiple that detect an object.
+// Function will return zero if nothing is detected.
 uint16_t sonar_getDistance(uint8_t sonarnum);
 
 // Function to get which region and object is detected in.
