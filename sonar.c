@@ -1,19 +1,33 @@
-/*
- * sonar.c
+/* sonar.c
+ * 
+ * Module contains everything needed to operate a PING sonar sensor.
  *
- * Created: 11/6/2013 2:12:06 PM
- */ 
+ * MAE3780 Mechatronics Final Project
+ * Cornell University
+ * Derek Faust, Nicole Panega, Abdullah Sayeem
+ */
 
-#define F_CPU 16000000UL
+
+//Include standard headers
 #include <avr/io.h>
-#include "serial.h"
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <stdint.h>
 
-//Declare Variables to be handled by ISR
-volatile unsigned int pulsewidth;
-volatile unsigned int sonarIsPolling;
+//Include Local Headers
+#include "serial.h"
+#include "sonar.h"
 
+//Define Constants
+#define F_CPU 16000000UL
+
+
+//Define global variables
+static volatile int8_t pollingSonar = -1;
+
+/* ISR to record the value of the signal
+ * Hard-coded to use PCINT0 and TIMER1
+ */
 ISR(PCINT0_vect){
 	//React to the pin change for the sonar
 	
@@ -27,16 +41,34 @@ ISR(PCINT0_vect){
 	}
 }
 
-void initSonar(void){
+SONAR initSonar(
+	volatile uint8_t * port,
+	volatile uint8_t * ddr,
+	volatile uint8_t * pin,
+	uint8_t pinn
+	);
+	
+	//Initialize Sonar Object
+	SONAR sonar_tmp;
+	sonar_tmp.port = port;
+	sonar_tmp.ddr = ddr;
+	sonar_tmp.pin = pin;
+	sonar_tmp.pinn = pinn;
+	
 	//Initializes sonar interrupts and timer
-	PCICR |= (1<<0);			//initializing pinchange interrupts
-	PCMSK0 &= ~(1<<0);			
-	sei();						//enable global interrupt
-	TCCR1B |= (1<<1|1<<0);		//setting prescaler to 64
-	TCCR1B &= ~(1<<2);
+	PCICR |= (1<<0);			//Initialize PCINT0
+	PCMSK0 &= ~(1<<pinn);		//Initialize specific pin for PCINT0
 }
 
-static inline void startSonarMeasurement(void){
+
+void initAllSonars(void){
+	sonar0 = initSonar(&PORTB, &DDRB, &PINB, 0);	//Initialize each sonar
+	sonars[1] = {sonar0};							//Create array of sonar objects
+	sei();											//Enable interrupts globally
+	TCCR1B |= (1<<1|1<<0); TCCR1B &= ~(1<<2);		//Set prescaler to 64
+	}
+
+void startSonarMeasurement(void){
 	//Sends trigger pulse to start sonar measurement
 	PCMSK0 &= ~(1<<0);			//disable interrupt
 	DDRB |= (1<<0);				//set pin to output
