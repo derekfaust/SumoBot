@@ -2,7 +2,7 @@
  * 
  * Module contains everything needed to operate a PING sonar sensor.
  *
- * MAE3780 Mechatronics Final Project
+ * MAE3780 Mechatronics Final Project 2013
  * Cornell University
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
@@ -20,10 +20,14 @@
 
 //Define Constants
 #define F_CPU 16000000UL
+#define NUM_SONARS 3
 
 
 //Define global variables
 static volatile int8_t pollingSonar = -1;
+static volatile int8_t lastPolled = -1;
+static volatile uint16_t distance[NUM_SONARS]
+static uint8_t pinnum[] = {0,1,2};
 
 /* ISR to record the value of the signal
  * Hard-coded to use PCINT0 and TIMER1
@@ -41,19 +45,7 @@ ISR(PCINT0_vect){
 	}
 }
 
-SONAR initSonar(
-	volatile uint8_t * port,
-	volatile uint8_t * ddr,
-	volatile uint8_t * pin,
-	uint8_t pinn
-	);
-	
-	//Initialize Sonar Object
-	SONAR sonar_tmp;
-	sonar_tmp.port = port;
-	sonar_tmp.ddr = ddr;
-	sonar_tmp.pin = pin;
-	sonar_tmp.pinn = pinn;
+void initSonar(void);
 	
 	//Initializes sonar interrupts and timer
 	PCICR |= (1<<0);			//Initialize PCINT0
@@ -69,16 +61,29 @@ void initAllSonars(void){
 	}
 
 void startSonarMeasurement(void){
-	//Sends trigger pulse to start sonar measurement
-	PCMSK0 &= ~(1<<0);			//disable interrupt
-	DDRB |= (1<<0);				//set pin to output
-	PORTB |= (1<<0);			//set pin to high
-	_delay_us(5);				//delay 5 microsecs
-	PORTB &= ~(1<<0);			//set pin to low
-	DDRB &= ~(1<<0);			//set pin to input
-	PCMSK0 |= (1<<0);			//enable interrupt
-	sonarIsPolling = 1;			//set polling flag
-}
+	if (pollingSonar == -1){
+		if ((lastPolled+1) < NUMSONARS){
+			pollingSonar = lastPolled+1;
+		}else{
+			pollingSonar = 0;
+		}
+
+		//Sends trigger pulse to start sonar measurement
+		//disable interrupt
+		PCMSK0 &= ~(1<<pinnnum[pollingSonar]);
+		//set pin to output
+		DDRB |= (1<<pinnum[pollingSonar]);
+		//set pin to high
+		PORTB |= (1<<pinnum[pollingSonar]);
+		//delay 5 microsecs
+		_delay_us(5);
+		//set pin to low
+		PORTB &= ~(1<<pinnum[pollingSonar]);
+		//set pin to input
+		DDRB &= ~(1<<pinnum[pollingSonar]);
+		//enable interrupt
+		PCMSK0 |= (1<<pinnum[pollingSonar]);
+	}
 
 float getSonar(void){
 	//Return the most recent sonar value and make sure that the sonar is polling
