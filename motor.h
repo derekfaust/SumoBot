@@ -16,7 +16,7 @@
 #include <stdint.h>
 
 // Function to initialize PWM
-void motor_initMotors(void);
+void motor_init(void);
 
 // Function to set motor speed
 void motor_setSpeed(uint8_t motornum, int_8t speed);
