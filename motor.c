@@ -39,7 +39,7 @@ void motor_init(void){
 	TCCR0A |= (1<<COM0A1)|(1<<COM0A0);
 	TCCR2A |= (1<<COM2A1)|(1<<COM2A0);
 	// Reset OCR0B when high, set when low
-	TCCROA |= (1<<COMOB1);
+	TCCR0A |= (1<<COM0B1);
 	TCCR2A |= (1<<COM2B1);
 	/* This is set up such that OCRnB should always be lower
 	 * than OCRnA to allow time for the transistors to switch
