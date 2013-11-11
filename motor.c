@@ -13,7 +13,6 @@
 #include <stdint.h>			// For data types
 
 //Include Local Headers
-#include "serial.h"			// For serial terminal readout
 #include "motor.h"			// Header for this file
 
 //Definitions

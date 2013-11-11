@@ -19,7 +19,6 @@
 
 // Include local headers
 #include "motor.h"			// Motor control to stop motors
-#include "serial.h"			// For debug output
 
 /* Connection Details
  * Pin	Sensor Placement
@@ -107,6 +106,5 @@ void qti_test(void){
 	while(1){
 		bounds = qti_touchingBounds();
 		_delay_ms(100);
-		printf("The bounds-touching variable is %u", bounds);
 	}
 }

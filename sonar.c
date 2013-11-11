@@ -22,7 +22,6 @@
 #include <stdint.h>			// For data types
 
 //Include Local Headers
-#include "serial.h"			// For serial terminal readout
 #include "sonar.h"			// Header for this file
 
 //Define global variables
@@ -203,8 +202,6 @@ void sonar_test(void){
 	while(1){
 		// Get distance
         distance = sonar_getDistance(0);
-		// Print the distance
-		printf("The measured distance is %u", distance);
 		// Wait a little
 		_delay_ms(100);
     }
