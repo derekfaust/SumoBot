@@ -28,7 +28,7 @@
 //Define global variables
 static volatile int8_t pollingSonar = -1;		// Notes which sonar is polling
 static volatile int8_t lastPolled = -1;			// Notes the last sonar to poll
-static volatile uint16_t distance[NUM_SONARS]	// Record distances sonars
+static volatile uint16_t distance[NUM_SONARS];	// Record distances sonars
 static uint8_t pinnum[] = {0,1,2};				// Specify the pin of each sonar
 
 
