@@ -12,10 +12,7 @@
 #ifndef QTI_H
 #define QTI_H
 
-//Include standard data types
-#include <stdint.h>		
-
 // Function to initialize all QTI sensors.
-void qti_init();
+void qti_init(void);
 
 #endif
