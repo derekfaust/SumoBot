@@ -7,8 +7,13 @@
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
 
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+
 // Include standard headers
 #include <avr/io.h>			// For general I/O
+#include <util/delay.h>		// For delay
 #include <avr/interrupt.h>	// For interrupts
 #include <stdint.h>			// For data types
 
