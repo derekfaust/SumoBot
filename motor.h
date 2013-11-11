@@ -19,7 +19,7 @@
 void motor_init(void);
 
 // Function to set motor speed
-void motor_setSpeed(uint8_t motornum, int_8t speed);
+void motor_setSpeed(uint8_t motornum, int8_t speed);
 /* motornum [0,1]:
  * right	0
  * left		1
