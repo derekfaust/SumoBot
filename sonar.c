@@ -12,7 +12,7 @@
 #define F_CPU 16000000UL		// CPU Clock Frequency
 #endif
 #define NUM_SONARS 3			// Number of sonars
-#define DETECT_THRESHOLD 15000	// Threshold for detecting an object
+#define DETECT_THRESHOLD 1327	// Threshold for detecting an object
 #define MAX_PULSE 160000		// Maximum return pulse time
 
 //Include standard headers
@@ -47,27 +47,38 @@ ISR(PCINT0_vect){
 	if (!((PINB>>pinnum[pollingSonar])&1)){
 		// Record Timer Value
 		distance[pollingSonar] = timervalue;
+		
+		lastPolled = pollingSonar;
 		//Reset polling flag
 		pollingSonar=-1;
 	}
 }
 
+uint16_t getTimer(void){
+	uint8_t sreg;
+	uint16_t time;
+	sreg = SREG;
+	cli();
+	time = TCNT1;
+	SREG = sreg;
+	return time;
+}
 
 void pollSonar(void){
 // Polls the next sensor if none are polling
-
-	if (pollingSonar == -1){
+	
+	if (pollingSonar == -1 || (getTimer()>1500)){
 		// If no sonars are polling
 
 		if ((lastPolled+1) < NUM_SONARS){
 			// If count doesn't need to be reset,
 			// poll next sonar
-			pollingSonar = lastPolled++;
+			pollingSonar = lastPolled+1;
 		}else{
 			// Otherwise, poll first sensor
 			pollingSonar = 0;
 		}
-
+		
 		//Sends trigger pulse to start sonar measurement
 		//Disable interrupt
 		PCMSK0 &= ~(1<<pinnum[pollingSonar]);
@@ -148,13 +159,16 @@ uint16_t sonar_getDistance(uint8_t sonarnum){
 int8_t sonar_getRegion(){
 // Return the region that an object is detected in
 	
+	//Trigger sonar poll
+	pollSonar();
+
 	// Map which sonars detected an object
 	uint8_t detectMap=0;	// Map of hits
 	uint8_t i;			// Iteration variable
 	for(i=0;i<NUM_SONARS;i++){
 		if(distance[i]<DETECT_THRESHOLD){
 			// Set bit if sonar detected something
-			detectMap = (1<<i);
+			detectMap |= (1<<i);
 		}
 	}
 
@@ -163,7 +177,7 @@ int8_t sonar_getRegion(){
 	 * such that sonar0 is in the center, sonar 1 is left, and
 	 * sonar 2 is right.
 	 */
-	uint8_t region=0;
+	uint8_t region=-8;
 	switch (detectMap){
 		case (1<<0):
 			// Center Detect
@@ -187,7 +201,7 @@ int8_t sonar_getRegion(){
 			break;
 		case (1<<0)|(1<<1)|(1<<2):
 			//All Detect
-			region = 0;
+			region = 8;
 			break;
 	}
 	return region;
@@ -197,11 +211,20 @@ int8_t sonar_getRegion(){
 void sonar_test(void){
     sonar_init();		// Initialize Sonar
 	uint16_t distance; 	// Initialize distance variable
+	DDRB |= (1<<5);
 	
 	// Loop forever
 	while(1){
 		// Get distance
         distance = sonar_getDistance(0);
+		
+		// Turn LED on for a proportional amount of time
+		PORTB |= (1<<5);
+		for (int i=0; i<distance; i++){
+			_delay_ms(1);
+		}
+		PORTB &= ~(1<<5);
+		
 		// Wait a little
 		_delay_ms(100);
     }
