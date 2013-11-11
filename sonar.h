@@ -1,4 +1,4 @@
-/* motor.h
+/* sonar.h
  * 
  * Header file defines all interfaces between
  * sonar module and the main program

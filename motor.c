@@ -1,4 +1,4 @@
-/* sonar.c
+/* motor.c
  * 
  * Module contains everything needed to operate an H-bridge.
  *
