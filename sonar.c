@@ -153,7 +153,7 @@ int8_t sonar_getRegion(){
 	uint8_t detectMap;	// Map of hits
 	uint8_t i;			// Iteration variable
 	for(i=0;i<NUM_SONARS;i++){
-		if(distance[i]<DETECT_THRESHOLD){i
+		if(distance[i]<DETECT_THRESHOLD){
 			// Set bit if sonar detected something
 			detectMap = (1<<i);
 		}
