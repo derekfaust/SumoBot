@@ -56,6 +56,10 @@ void motor_init(void){
 	// Set Waveform Generation Mode to Phase-correct PWM
 	TCCROA |= (1<<WGM00);
 	TCCR2A |= (1<<WGM20);
+
+	// Set motor pins to outputs
+	PORTD |= (1<<3)|(1<<5)|(1<<6);
+	PORTB |= (1<<3);
 }
 
 void motor_setSpeed(uint8_t motornum, int8_t speed){
