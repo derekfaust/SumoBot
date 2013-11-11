@@ -150,7 +150,7 @@ int8_t sonar_getRegion(){
 // Return the region that an object is detected in
 	
 	// Map which sonars detected an object
-	uint8_t detectMap;	// Map of hits
+	uint8_t detectMap=0;	// Map of hits
 	uint8_t i;			// Iteration variable
 	for(i=0;i<NUM_SONARS;i++){
 		if(distance[i]<DETECT_THRESHOLD){
@@ -164,32 +164,32 @@ int8_t sonar_getRegion(){
 	 * such that sonar0 is in the center, sonar 1 is left, and
 	 * sonar 2 is right.
 	 */
-	uint8_t region;
+	uint8_t region=0;
 	switch (detectMap){
-	case (1<<0):
-		// Center Detect
-		region = 0;
-		break;
-	case (1<<2):
-		// Right Detect
-		region = 2;
-		break;
-	case (1<<1):
-		// Left Detect
-		region = -2;
-		break;
-	case (1<<2)|(1<<0):
-		//Center Right Detect
-		region = 1;
-		break;
-	case (1<<1)|(1<<0):
-		//Center Left Detect
-		region = -1;
-		break;
-	case (1<<0)|(1<<1)|(1<<2):
-		//All Detect
-		region = 0;
-		break;
+		case (1<<0):
+			// Center Detect
+			region = 0;
+			break;
+		case (1<<2):
+			// Right Detect
+			region = 2;
+			break;
+		case (1<<1):
+			// Left Detect
+			region = -2;
+			break;
+		case (1<<2)|(1<<0):
+			//Center Right Detect
+			region = 1;
+			break;
+		case (1<<1)|(1<<0):
+			//Center Left Detect
+			region = -1;
+			break;
+		case (1<<0)|(1<<1)|(1<<2):
+			//All Detect
+			region = 0;
+			break;
 	}
 	return region;
 }
