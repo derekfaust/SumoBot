@@ -21,3 +21,6 @@
 
 # Vim temp files
 *.swp
+
+# Build Files
+Debug/
