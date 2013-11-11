@@ -60,7 +60,7 @@ void pollSonar(void){
 	if (pollingSonar == -1){
 		// If no sonars are polling
 
-		if ((lastPolled+1) < NUMSONARS){
+		if ((lastPolled+1) < NUM_SONARS){
 			// If count doesn't need to be reset,
 			// poll next sonar
 			pollingSonar = lastPolled++;
