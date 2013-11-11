@@ -29,8 +29,8 @@
  */
 
 //Define variables
-static uint8_t rightSpeed={0,42,87,127,167,213,255};
-static uint8_t leftSpeed={0,42,87,127,167,213,255};
+static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
+static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
 
 void motor_init(void){
 // Function to initialize PWM
