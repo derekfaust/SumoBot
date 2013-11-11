@@ -52,7 +52,6 @@ ISR(PCINT2_vect){
 
 			//Initialize LED
 			DDRB |= (1<<5);
-
 			while (1){
 				//Blink LED indefinitely
 				PORTB ^= (1<<5);
@@ -93,4 +92,20 @@ uint8_t qti_touchingBounds(void){
 // Pass where robot is touching bounds to
 // the main program loop
 	return touchingBounds;
+}
+
+void qti_test(void){
+// Function to test the QTI module
+	
+	// Initialize QTI sensor
+	qti_init();
+
+	// Initialize bounds variable
+	uint8_t bounds = 0;
+
+	while(1){
+		bounds = qti_touchingBounds();
+		_delay_ms(100);
+		printf("The bounds-touching variable is %u", bounds);
+	}
 }
