@@ -93,7 +93,7 @@ void pollSonar(void){
  *
  */
 
-void sonar_init(void);
+void sonar_init(void){
 //Initializes sonar interrupts and timer
 	
 	//Initialize PCINT0
