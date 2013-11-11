@@ -65,23 +65,41 @@ void motor_setSpeed(uint8_t motornum, int8_t speed){
 		switch (motornum){
 		case 0:
 			// Left Motor
+			
+			// Find the setpt from the array
 			setpt = leftSpeed[speed+3];
+			
 			if(setpt > 0xFF-DEAD_TIME){
+				// If setpt would overflow on the high side
+				// Then move setpt to max value
 				setpt = 0xFF-DEAD_TIME;
 			}else if(setpt < DEAD_TIME){
+				// If setpt would overflow on the low side
+				// Then move setpt to min value
 				setpt = DEAD_TIME;
 			}
+			
+			//Set the motor speed
 			OCR0A = setpt+DEAD_TIME;
 			OCR0B = setpt-DEAD_TIME;
 			break;
 		case 1:
 			// Right Motor
+			
+			// Find the setpt from the speed array
 			setpt = rightSpeed[speed+3];
+
 			if(setpt > 0xFF-DEAD_TIME){
+				// If setpt would overflow on the high side
+				// Then move setpt to max value
 				setpt = 0xFF-DEAD_TIME;
 			}else if(setpt < DEAD_TIME){
+				// If setpt would overflow on the low side
+				// Then move setpt to min value
 				setpt = DEAD_TIME;
 			}
+			
+			//Set the motor speed
 			OCR2A = setpt+DEAD_TIME;
 			OCR2B = setpt-DEAD_TIME;
 			break;
