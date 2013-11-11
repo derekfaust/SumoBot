@@ -31,4 +31,7 @@ int8_t sonar_getRegion();
  * Far Right 2
  */
 
+// Define test sonar function
+void sonar_test(void);
+
 #endif

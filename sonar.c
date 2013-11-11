@@ -193,3 +193,19 @@ int8_t sonar_getRegion(){
 	}
 	return region;
 }
+
+
+void test_sonar(void){
+    sonar_init();		// Initialize Sonar
+	uint16_t distance; 	// Initialize distance variable
+	
+	// Loop forever
+	while(1){
+		// Get distance
+        distance = sonar_getDistance(0);
+		// Print the distance
+		printf("The measured distance is %u", distance);
+		// Wait a little
+		_delay_ms(100);
+    }
+}
