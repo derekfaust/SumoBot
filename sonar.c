@@ -71,7 +71,7 @@ void pollSonar(void){
 
 		//Sends trigger pulse to start sonar measurement
 		//Disable interrupt
-		PCMSK0 &= ~(1<<pinnnum[pollingSonar]);
+		PCMSK0 &= ~(1<<pinnum[pollingSonar]);
 		//Set pin to output
 		DDRB |= (1<<pinnum[pollingSonar]);
 		//Set pin to high
