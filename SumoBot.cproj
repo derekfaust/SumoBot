@@ -93,7 +93,34 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="infrared.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="motor.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="qti.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="qti.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="serial.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonar.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="sonar.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="SumoBot.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="test_sonar.c">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
