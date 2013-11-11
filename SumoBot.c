@@ -1,10 +1,11 @@
-/*
- * MechatronicsRobot.c
+/* SumoBot.c
+ * 
+ * Main program to operate the robot during competition
  *
- * Created: 11/10/2013 10:41:10 PM
- *  Author: dfaust
- */ 
-
+ * MAE3780 Mechatronics Final Project 2013
+ * Cornell University
+ * Derek Faust, Nicole Panega, Abdullah Sayeem
+ */
 
 #include <avr/io.h>
 
