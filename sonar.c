@@ -7,6 +7,13 @@
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
 
+//Define Constants
+#ifndef F_CPU
+#define F_CPU 16000000UL		// CPU Clock Frequency
+#endif
+#define NUM_SONARS 3			// Number of sonars
+#define DETECT_THRESHOLD 15000	// Threshold for detecting an object
+#define MAX_PULSE 160000		// Maximum return pulse time
 
 //Include standard headers
 #include <avr/io.h>			// For general I/O
@@ -17,15 +24,6 @@
 //Include Local Headers
 #include "serial.h"			// For serial terminal readout
 #include "sonar.h"			// Header for this file
-
-//Define Constants
-#ifndef F_CPU
-#define F_CPU 16000000UL		// CPU Clock Frequency
-#endif
-#define NUM_SONARS 3			// Number of sonars
-#define DETECT_THRESHOLD 15000	// Threshold for detecting an object
-#define MAX_PULSE 160000		// Maximum return pulse time
-
 
 //Define global variables
 static volatile int8_t pollingSonar = -1;		// Notes which sonar is polling
