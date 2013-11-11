@@ -195,7 +195,7 @@ int8_t sonar_getRegion(){
 }
 
 
-void test_sonar(void){
+void sonar_test(void){
     sonar_init();		// Initialize Sonar
 	uint16_t distance; 	// Initialize distance variable
 	

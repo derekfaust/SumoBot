@@ -19,6 +19,7 @@
 
 // Include local headers
 #include "motor.h"			// Motor control to stop motors
+#include "serial.h"			// For debug output
 
 /* Connection Details
  * Pin	Sensor Placement
