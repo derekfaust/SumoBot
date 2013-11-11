@@ -7,6 +7,11 @@
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
 
+//Define Constants
+#ifndef F_CPU
+#define F_CPU 16000000UL		// CPU Clock Frequency
+#endif
+
 // Include standard libraries
 #include <avr/io.h>		// For general I/O
 #include <util/delay.h>	// For delay
