@@ -19,7 +19,9 @@
 #include "sonar.h"			// Header for this file
 
 //Define Constants
+#ifndef F_CPU
 #define F_CPU 16000000UL		// CPU Clock Frequency
+#endif
 #define NUM_SONARS 3			// Number of sonars
 #define DETECT_THRESHOLD 15000	// Threshold for detecting an object
 #define MAX_PULSE 160000		// Maximum return pulse time
