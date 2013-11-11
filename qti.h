@@ -15,4 +15,7 @@
 // Function to initialize all QTI sensors.
 void qti_init(void);
 
+// Function to pass where bounds are being touched.
+uint8_t qti_touchingBounds(void);
+
 #endif
