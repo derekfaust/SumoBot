@@ -28,6 +28,10 @@
  * OCR2B	Right	Reverse
  */
 
+//Define variables
+static uint8_t rightSpeed={0,42,87,127,167,213,255};
+static uint8_t leftSpeed={0,42,87,127,167,213,255};
+
 void motor_init(void){
 // Function to initialize PWM
 
@@ -54,14 +58,33 @@ void motor_init(void){
 	TCCR2A |= (1<<WGM20);
 }
 
-void motor_setSpeed(uint8_t motornum, int_8t speed){
+void motor_setSpeed(uint8_t motornum, int8_t speed){
 // Function to set motor speed
-	switch (motornum){
-	case 0:
-		// Right Motor
-		break;
-	case 1:
-		// Left Motor
-		break;
+	if(speed >= -3 && speed <= 3){
+		uint8_t setpt;
+		switch (motornum){
+		case 0:
+			// Left Motor
+			setpt = leftSpeed[speed+3];
+			if(setpt > 0xFF-DEAD_TIME){
+				setpt = 0xFF-DEAD_TIME;
+			}else if(setpt < DEAD_TIME){
+				setpt = DEAD_TIME;
+			}
+			OCR0A = setpt+DEAD_TIME;
+			OCR0B = setpt-DEAD_TIME;
+			break;
+		case 1:
+			// Right Motor
+			setpt = rightSpeed[speed+3];
+			if(setpt > 0xFF-DEAD_TIME){
+				setpt = 0xFF-DEAD_TIME;
+			}else if(setpt < DEAD_TIME){
+				setpt = DEAD_TIME;
+			}
+			OCR2A = setpt+DEAD_TIME;
+			OCR2B = setpt-DEAD_TIME;
+			break;
+		}
 	}
 }
