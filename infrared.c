@@ -14,10 +14,13 @@
 #define PULSE_LENGTH 100	// Pulse length in # of periods
 #define IR_HALF_PERIOD 13	// Half the period in us
 
-//Include standard data types
+//Include standard libraries
 #include <stdint.h>			// For standard data types	
 #include <avr/io.h>			// For general I/O
 #include <util/delay.h>		// For delays
+
+// Include local modules
+#include "infrared.h"		// Include own header file
 
 /* Begin Internal Functions Here
  * =============================
