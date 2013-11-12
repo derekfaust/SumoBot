@@ -216,26 +216,3 @@ int8_t sonar_getRegion(){
 	}
 	return region;
 }
-
-
-void sonar_test(void){
-    sonar_init();		// Initialize Sonar
-	uint16_t distance; 	// Initialize distance variable
-	DDRB |= (1<<5);
-	
-	// Loop forever
-	while(1){
-		// Get distance
-        distance = sonar_getDistance(0);
-		
-		// Turn LED on for a proportional amount of time
-		PORTB |= (1<<5);
-		for (int i=0; i<distance; i++){
-			_delay_ms(1);
-		}
-		PORTB &= ~(1<<5);
-		
-		// Wait a little
-		_delay_ms(100);
-    }
-}

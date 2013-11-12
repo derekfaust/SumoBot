@@ -93,18 +93,3 @@ uint8_t qti_touchingBounds(void){
 // the main program loop
 	return touchingBounds;
 }
-
-void qti_test(void){
-// Function to test the QTI module
-	
-	// Initialize QTI sensor
-	qti_init();
-
-	// Initialize bounds variable
-	uint8_t bounds = 0;
-
-	while(1){
-		bounds = qti_touchingBounds();
-		_delay_ms(100);
-	}
-}
