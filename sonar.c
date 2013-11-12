@@ -13,7 +13,7 @@
 #endif
 #define NUM_SONARS 3			// Number of sonars
 #define DETECT_THRESHOLD 1327	// Threshold for detecting an object
-#define MAX_PULSE 160000		// Maximum return pulse time
+#define MAX_PULSE 4625			// Maximum return pulse time
 
 //Include standard headers
 #include <avr/io.h>			// For general I/O
@@ -66,8 +66,16 @@ uint16_t getTimer(void){
 
 void pollSonar(void){
 // Polls the next sensor if none are polling
-	
-	if (pollingSonar == -1 || (getTimer()>1500)){
+	if (getTimer()>MAX_PULSE)){
+		//If sonar hasn't responded by maximum pulse
+
+		//Skip it
+		lastPolled = pollingSonar;
+		//Cancel Polling
+		pollingSonar = -1;
+	}
+
+	if (pollingSonar == -1)
 		// If no sonars are polling
 
 		if ((lastPolled+1) < NUM_SONARS){
