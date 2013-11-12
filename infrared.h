@@ -18,7 +18,8 @@
 // Function to initialize all IR sensors.
 void infrared_init();
 
-// Function to get which region and object is detected in.
-int8_t infrared_getRegion();
+// Function to get a map locating where
+// around the periphery object are detected.
+int8_t infrared_getMap();
 
 #endif
