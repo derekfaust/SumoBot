@@ -55,13 +55,15 @@ ISR(PCINT0_vect){
 }
 
 uint16_t getTimer(void){
-	uint8_t sreg;
+// Function to read the timer value
+
+	uint8_t sreg;	// Initialize variables
 	uint16_t time;
-	sreg = SREG;
-	cli();
-	time = TCNT1;
-	SREG = sreg;
-	return time;
+	sreg = SREG;	// Store interrupt regist state
+	cli();			// Disable interrupts
+	time = TCNT1;	// Read timer value
+	SREG = sreg;	// Restore interrupt states
+	return time;	// Return timer value
 }
 
 void pollSonar(void){
