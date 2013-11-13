@@ -93,6 +93,9 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="infrared.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="infrared.h">
       <SubType>compile</SubType>
     </Compile>
