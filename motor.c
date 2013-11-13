@@ -33,7 +33,7 @@ static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
 
 void motor_init(void){
 // Function to initialize PWM
-
+	
 	// Set OCR0A when high, reset when low
 	TCCR0A |= (1<<COM0A1)|(1<<COM0A0);
 	TCCR2A |= (1<<COM2A1)|(1<<COM2A0);
@@ -57,8 +57,8 @@ void motor_init(void){
 	TCCR2A |= (1<<WGM20);
 
 	// Set motor pins to outputs
-	PORTD |= (1<<3)|(1<<5)|(1<<6);
-	PORTB |= (1<<3);
+	DDRD |= (1<<3)|(1<<5)|(1<<6);
+	DDRB |= (1<<3);
 }
 
 void motor_setSpeed(uint8_t motornum, int8_t speed){
