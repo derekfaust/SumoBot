@@ -56,7 +56,7 @@ uint8_t pollInfrared(uint8_t zone){
 		
 		// Record the received pulses from
 		// the first 6 registers in port c
-		map = PINC|(~((1<<6)|(1<<7))); 
+		map = (~PINC)|0x3F;
 
 		// Return the results
 		return map;
