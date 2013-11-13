@@ -23,7 +23,7 @@
 #include "infrared.h"		// Include own header file
 
 // Define array of half-periods (closest range first)
-static uint8_t half_period[]={13,14};
+static uint8_t half_period[]={13,6};
 
 /* Begin Internal Functions Here
  * =============================
