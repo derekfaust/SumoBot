@@ -34,7 +34,7 @@ uint8_t pollInfrared(void){
 	uint8_t map;
 	
 	// Pulse the output port
-	uint8_t iterpulse; 			// Initialize iteration variable
+	uint8_t iter_pulse; 			// Initialize iteration variable
 
 	// Loop for the number of periods in the pulse
 	for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
