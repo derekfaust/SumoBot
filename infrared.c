@@ -44,11 +44,11 @@ uint8_t pollInfrared(uint8_t zone){
 
 		// Loop for the number of periods in the pulse
 		for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
-			PORTC |= (1<<7);				// Turn on the LEDs
+			PORTD |= (1<<7);				// Turn on the LEDs
 			for (iter_period = 0; iter_period<half_period[zone]; iter_period++){
 				_delay_us (1);				// Wait half the period
 			}
-			PORTC &= ~(1<<7);				// Turn off the LEDs
+			PORTD &= ~(1<<7);				// Turn off the LEDs
 			for (iter_period = 0; iter_period<half_period[zone]; iter_period++){
 				_delay_us (1);				// Wait half the period
 			}
