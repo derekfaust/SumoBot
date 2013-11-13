@@ -68,7 +68,7 @@ uint16_t getTimer(void){
 
 void pollSonar(void){
 // Polls the next sensor if none are polling
-	if (getTimer()>MAX_PULSE)){
+	if (getTimer()>MAX_PULSE){
 		//If sonar hasn't responded by maximum pulse
 
 		//Skip it
@@ -77,7 +77,7 @@ void pollSonar(void){
 		pollingSonar = -1;
 	}
 
-	if (pollingSonar == -1)
+	if (pollingSonar == -1){
 		// If no sonars are polling
 
 		if ((lastPolled+1) < NUM_SONARS){
