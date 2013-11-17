@@ -11,7 +11,7 @@
 #ifndef F_CPU
 #define F_CPU 16000000UL		// CPU Clock Frequency
 #endif
-#define NUM_SONARS 3			// Number of sonars
+#define NUM_SONARS 2			// Number of sonars
 #define DETECT_THRESHOLD 1327	// Threshold for detecting an object
 #define MAX_PULSE 4625			// Maximum return pulse time
 
@@ -28,7 +28,9 @@
 static volatile int8_t pollingSonar = -1;		// Notes which sonar is polling
 static volatile int8_t lastPolled = -1;			// Notes the last sonar to poll
 static volatile uint16_t distance[NUM_SONARS];	// Record distances sonars
-static uint8_t pinnum[] = {0,1,2};				// Specify the pin of each sonar
+static volatile uint8_t pulseStarted;			// Record if input pulse has started
+static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
+static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
 
 
 /* Begin Internal Functions Here
@@ -42,15 +44,27 @@ ISR(PCINT0_vect){
 	
 	//Stopping interrupts not necessary b.c interrupts stop before ISR
 	unsigned int timervalue = TCNT1;	//Record timer value to i
-	TCNT1 = 0;							//Reset timer
-	//If falling edge of pulse
-	if (!((PINB>>pinnum[pollingSonar])&1)){
-		// Record Timer Value
-		distance[pollingSonar] = timervalue;
-		
-		lastPolled = pollingSonar;
-		//Reset polling flag
-		pollingSonar=-1;
+
+	// If waiting for pulse to end and pin is low, bit is 1
+	uint8_t pulseEnded = pulseStarted & (~PINB)
+	
+	/* Note: If the rising edge of the second sensor is caught,
+	 * neither line will be low and pulseEnded will be 0
+	 */
+	if (pulseStarted){							// If waiting for a sensor
+		if ((pulseEnded>>pinnum[0])&1){			// If first sonar pulse ends
+			distance[0] = timervalue;			// Record Timer Value
+			pulseStarted &= ~(1<<pinnum[0]);	// No Longer Polling this Sonar
+			pulseReceived++;					// Note that the pulse was recieved
+		}else if ((pulseEnded>>pinnum[1])&1){	// If second sonar pulse ends
+			distance[1] = timervalue;			// Record Timer Value
+			pulseStarted &= ~(1<<pinnum[1]);	// No Longer Polling this Sonar
+			pulseReceived++;					// Note that the pulse was recieved
+	}else{
+		// Reset the timer
+		TCNT1 = 0;
+		// Set the pulse as started on both sonars
+		pulseStarted = PINB & ((1<<pinnum[0])|(1<<pinnum[1]));
 	}
 }
 
@@ -68,42 +82,25 @@ uint16_t getTimer(void){
 
 void pollSonar(void){
 // Polls the next sensor if none are polling
-	if (getTimer()>MAX_PULSE){
-		//If sonar hasn't responded by maximum pulse
 
-		//Skip it
-		lastPolled = pollingSonar;
-		//Cancel Polling
-		pollingSonar = -1;
-	}
+	if ((pulseRecieved == NUM_SONAR)||(getTimer()>MAX_PULSE)){
+		// If no sonars are polling or if time has been exceeded
 
-	if (pollingSonar == -1){
-		// If no sonars are polling
-
-		if ((lastPolled+1) < NUM_SONARS){
-			// If count doesn't need to be reset,
-			// poll next sonar
-			pollingSonar = lastPolled+1;
-		}else{
-			// Otherwise, poll first sensor
-			pollingSonar = 0;
-		}
-		
-		//Sends trigger pulse to start sonar measurement
+		//Send trigger pulse to start sonar measurement on multiple sonars
 		//Disable interrupt
-		PCMSK0 &= ~(1<<pinnum[pollingSonar]);
+		PCMSK0 &= ~((1<<pinnum[0])|(1<<pinnum[1]));
 		//Set pin to output
-		DDRB |= (1<<pinnum[pollingSonar]);
+		DDRB |= ((1<<pinnum[0])|(1<<pinnum[1]));
 		//Set pin to high
-		PORTB |= (1<<pinnum[pollingSonar]);
+		PORTB |= ((1<<pinnum[0])|(1<<pinnum[1]));
 		//Delay 5 microsecs
 		_delay_us(5);
 		//Set pin to low
-		PORTB &= ~(1<<pinnum[pollingSonar]);
+		PORTB &= ~((1<<pinnum[0])|(1<<pinnum[1]));
 		//Set pin to input
-		DDRB &= ~(1<<pinnum[pollingSonar]);
+		DDRB &= ~((1<<pinnum[0])|(1<<pinnum[1]));
 		//Enable interrupt
-		PCMSK0 |= (1<<pinnum[pollingSonar]);
+		PCMSK0 |= ((1<<pinnum[0])|(1<<pinnum[1]));
 	}
 }
 
