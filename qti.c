@@ -60,12 +60,17 @@ ISR(PCINT2_vect){
 	if ((PIND>>1)&1){
 		// Set zeroth bit if front is touching
 		qti_touchingBounds |= (1<<0);
+	}else{
+		// Unset zeroth bit if front isn't touching
+		qti_touchingBounds &= ~(1<<0);
 	}
 	if ((PIND>>2)&1){
 		// Set first bit if back is touching
 		qti_touchingBounds |= (1<<1);	
+	}else{
+		// Unset first bit if back isn't touching
+		qti_touchingBounds &= ~(1<<1);	
 	}
-
 }
 
 /* Begin Global Functions Here
