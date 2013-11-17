@@ -31,7 +31,7 @@
  */
 
 // Operate the robot in search mode
-int8_t routines_search(void){
+void routines_search(void){
 
 	// Initialize object detection variable
 	int8_t objDetected = 0;
@@ -96,7 +96,7 @@ int8_t routines_search(void){
 }
 
 // Operate the robot in attack mode
-int8_t routines_attack(int8_t direction){
+void routines_attack(int8_t direction){
 
 	// Charge the opponent
 	motor_setSpeed(3*direction,3*direction);
