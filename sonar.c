@@ -12,7 +12,8 @@
 #define F_CPU 16000000UL		// CPU Clock Frequency
 #endif
 #define NUM_SONARS 2			// Number of sonars
-#define DETECT_THRESHOLD 1327	// Threshold for detecting an object
+#define DETECT_THRESHOLD 20		// Threshold for detecting an object
+								// [1.73 inch increments]
 #define MAX_PULSE 4625			// Maximum return pulse time
 
 //Include standard headers
@@ -25,7 +26,8 @@
 #include "sonar.h"			// Header for this file
 
 //Define global variables
-static volatile uint16_t distance[NUM_SONARS];	// Record distances sonars
+static volatile uint16_t distance[NUM_SONARS];	// Record raw timer values for sonars
+static uint8_t dist8[NUM_SONARS];				// 8-bit distances values for sonars
 static volatile uint8_t pulseStarted;			// Record if input pulse has started
 static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
 static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
@@ -54,11 +56,13 @@ ISR(PCINT0_vect){
 			distance[0] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[0]);	// No Longer Polling this Sonar
 			pulseReceived++;					// Note that the pulse was received
+
 		}else if ((pulseEnded>>pinnum[1])&1){	// If second sonar pulse ends
 			distance[1] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[1]);	// No Longer Polling this Sonar
 			pulseReceived++;					// Note that the pulse was received
 		}
+
 	}else{
 		// Reset the timer
 		TCNT1 = 0;
@@ -103,6 +107,17 @@ void pollSonar(void){
 	}
 }
 
+void distToByte(void){
+// Converts 16-bit distances to 8-bit distances
+
+	uint8_t iter_sonar;		// Initialize iterator
+	//For every sensor, convert it;s distance to one byte
+	for (iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
+		// Divide by 32 to convert to one byte.
+		dist8[iter_sonar] = (uint8_t)(distance[iter_sonar]>>5);
+	}
+}
+
 
 /* Begin Global Functions Here
  * ===========================
@@ -121,8 +136,11 @@ void sonar_init(void){
 }
 
 
-uint16_t sonar_getDistance(uint8_t sonarnum){
+uint8_t sonar_getDistance(uint8_t sonarnum){
 // Trigger polling and return distance of object
+/* Distance is returned as a value from 0 to 145
+ * with a resolution of 1.73 inches.
+ */
 	
 	//Trigger sonar poll
 	pollSonar();
@@ -131,16 +149,31 @@ uint16_t sonar_getDistance(uint8_t sonarnum){
 	if(sonarnum>=0 && sonarnum<=NUM_SONARS){
 		// If distance requested from a specific sensor,
 		// then return the distance from that sensor
-		return distance[sonarnum];
+
+		// Return the value divided by 32 so it fits in one byte
+		/* Note: typically, distToByte() should be called,
+		 * but this is faster if only one value is needed
+		 */
+		return (uint8_t)(distance[sonarnum]>>5);
+
 	}else{
 		// Otherwise, return the smallest value
-		uint8_t iter_sonar;
-		uint16_t minDist = distance[0];
+		// Note: this function is significantly slower as
+		// 16-bit variables must be compared.
+
+		uint8_t iter_sonar;				// Initialize iteration variable
+		uint8_t minDist = dist8[0];	// Initialize compare variable
+		
+		// Compare all sonar distances
 		for(iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
-			if (distance[iter_sonar]<minDist){
-				minDist = distance[iter_sonar];
+			if (dist8[iter_sonar]<minDist){
+				// If distance is less than shortest distance,
+				// then it is the shortest distance.
+				minDist = dist8[iter_sonar];
 			}
 		}
+
+		// Return the value divided by 32 so it fits in one byte
 		return minDist;
 	}
 }
@@ -149,14 +182,17 @@ uint16_t sonar_getDistance(uint8_t sonarnum){
 int8_t sonar_getRegion(void){
 // Return the region that an object is detected in
 	
-	//Trigger sonar poll
+	// Trigger sonar poll
 	pollSonar();
+
+	// Convert raw values to bytes
+	distToByte();
 
 	// Map which sonars detected an object
 	uint8_t detectMap=0;	// Map of hits
 	uint8_t i;				// Iteration variable
 	for(i=0;i<NUM_SONARS;i++){
-		if(distance[i]<DETECT_THRESHOLD){
+		if(dist8[i]<DETECT_THRESHOLD){
 			// Set bit if sonar detected something
 			detectMap |= (1<<i);
 		}
