@@ -21,7 +21,10 @@ int8_t routines_search(void);
 // Operate the robot in attack mode
 int8_t routines_attack(int8_t direction);
 
-// Avoid being rear-ended
+// Avoid being rear-ended if we don't have time to reverse momentum
 void routines_evade(int8_t direction);
+
+// Torero move to avoid being pushed out
+void routines_spinOff(int8_t direction);
 
 #endif
