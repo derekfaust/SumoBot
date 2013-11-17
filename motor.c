@@ -31,6 +31,9 @@
 static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
 static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
 static uint8_t currentSpeed[2];
+int8_t motor_dirTurn=0;
+int8_t motor_dirTravel=0;
+
 
 /* Begin Global Functions here
  * ==========================
@@ -67,53 +70,68 @@ void motor_init(void){
 	DDRB |= (1<<3);
 }
 
-void motor_setSpeed(uint8_t motornum, int8_t speed){
+void motor_setSpeed(int8_t speed0, int8_t speed1){
 // Function to set motor speed
-	if(speed >= -3 && speed <= 3){
-		uint8_t setpt;
-		switch (motornum){
-		case 0:
-			// Left Motor
-			
-			// Find the setpt from the array
-			setpt = leftSpeed[speed+3];
-			
-			if(setpt > 0xFF-DEAD_TIME){
-				// If setpt would overflow on the high side
-				// Then move setpt to max value
-				setpt = 0xFF-DEAD_TIME;
-			}else if(setpt < DEAD_TIME){
-				// If setpt would overflow on the low side
-				// Then move setpt to min value
-				setpt = DEAD_TIME;
-			}
-			
-			//Set the motor speed
-			OCR0A = setpt+DEAD_TIME;
-			OCR0B = setpt-DEAD_TIME;
-			break;
-		case 1:
-			// Right Motor
-			
-			// Find the setpt from the speed array
-			setpt = rightSpeed[speed+3];
+	// Left Motor
 
-			if(setpt > 0xFF-DEAD_TIME){
-				// If setpt would overflow on the high side
-				// Then move setpt to max value
-				setpt = 0xFF-DEAD_TIME;
-			}else if(setpt < DEAD_TIME){
-				// If setpt would overflow on the low side
-				// Then move setpt to min value
-				setpt = DEAD_TIME;
-			}
-			
-			//Set the motor speed
-			OCR2A = setpt+DEAD_TIME;
-			OCR2B = setpt-DEAD_TIME;
-			break;
-		}
-		currentSpeed[motornum] = speed;
+	// Find the setpt from the array
+	uint8_t setpt0 = leftSpeed[speed0+3];
+	uint8_t setpt1 = rightSpeed[speed1+3];
+	
+	// Check to make sure register won't overflow
+	if(setpt0 > 0xFF-DEAD_TIME){
+		// If setpt would overflow on the high side
+		// Then move setpt to max value
+		setpt0 = 0xFF-DEAD_TIME;
+	}else if(setpt0 < DEAD_TIME){
+		// If setpt would overflow on the low side
+		// Then move setpt to min value
+		setpt0 = DEAD_TIME;
+	}
+	
+	if(setpt1 > 0xFF-DEAD_TIME){
+		// If setpt would overflow on the high side
+		// Then move setpt to max value
+		setpt1 = 0xFF-DEAD_TIME;
+	}else if(setpt1 < DEAD_TIME){
+		// If setpt would overflow on the low side
+		// Then move setpt to min value
+		setpt1 = DEAD_TIME;
+	}
+	
+	// Set the motor speed
+	OCR0A = setpt0+DEAD_TIME;
+	OCR0B = setpt0-DEAD_TIME;
+	
+	OCR2A = setpt1+DEAD_TIME;
+	OCR2B = setpt1-DEAD_TIME;
+	
+	// Record the speed values
+	currentSpeed[0] = speed0;
+	currentSpeed[1] = speed1;
+
+	// Record direction
+	motor_dirTurn = 0;
+	motor_dirTravel = 0;
+	int8_t diff = speed0-speed1;
+	int8_t sum = speed0+speed1;
+	if (diff<0){
+		// If left is less than right
+		// Turning Left
+		motor_dirTurn = -1;
+	}else if(diff>0){
+		// If left is more than right
+		// Turning Right
+		motor_dirTurn = 1;
+	}
+	if(sum>0){
+		// If combined is more than zero
+		// Moving forward
+		motor_dirTravel = 1;
+	}else if(sum<0){
+		// If combined is less than zero
+		// Moving Backwards
+		motor_dirTravel = -1;
 	}
 }
 

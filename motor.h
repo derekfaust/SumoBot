@@ -15,16 +15,16 @@
 // Include standard data types
 #include <stdint.h>
 
+// Global Variables
+extern int8_t motor_dirTurn;
+extern int8_t motor_dirTravel;
+
 // Function to initialize PWM
 void motor_init(void);
 
 // Function to set motor speed
-void motor_setSpeed(uint8_t motornum, int8_t speed);
-/* motornum [0,1]:
- * right	0
- * left		1
- *
- * speed [-3,3]:
+void motor_setSpeed(int8_t speed0, int8_t speed1);
+/* speed(0,1) [-3,3]:
  * full reverse	-3
  * stopped		 0
  * full forward  3
