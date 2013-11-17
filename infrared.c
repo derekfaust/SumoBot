@@ -26,33 +26,42 @@
 
 // Define array of half-periods (closest range first)
 static uint8_t half_period=13;
-static uint8_t bin_map;
+static uint8_t activeMap;
+static uint8_t activeMap;
+static uint8_t passiveMap;
 
 /* Begin Internal Functions Here
  * =============================
  *
  */
 
-void pollInfrared(void){
-	// Pulse the output port
-	uint8_t iter_pulse; 			// Initialize iteration variable
-	uint8_t iter_period;
+void pollInfrared(uint8_t active){
 
-	// Loop for the number of periods in the pulse
-	for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
-		PORTD |= (1<<7);				// Turn on the LEDs
-		for (iter_period = 0; iter_period<half_period; iter_period++){
-			_delay_us (1);				// Wait half the period
+	if(active){
+		// Pulse the output port
+		uint8_t iter_pulse; 			// Initialize iteration variable
+		uint8_t iter_period;
+
+		// Loop for the number of periods in the pulse
+		for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
+			PORTD |= (1<<7);				// Turn on the LEDs
+			for (iter_period = 0; iter_period<half_period; iter_period++){
+				_delay_us (1);				// Wait half the period
+			}
+			PORTD &= ~(1<<7);				// Turn off the LEDs
+			for (iter_period = 0; iter_period<half_period; iter_period++){
+				_delay_us (1);				// Wait half the period
+			}
 		}
-		PORTD &= ~(1<<7);				// Turn off the LEDs
-		for (iter_period = 0; iter_period<half_period; iter_period++){
-			_delay_us (1);				// Wait half the period
-		}
+			
+		// Record the received pulses from
+		// the first 6 registers in port c
+		activeMap = (~PINC)|0x3F;
+	}else{
+		// Record which sensors are recieving
+		// Stray IR signals
+		passiveMap = (~PINC)|0x3F;
 	}
-		
-	// Record the received pulses from
-	// the first 6 registers in port c
-	bin_map = (~PINC)|0x3F;
 }
 
 /* Begin Global Functions Here
@@ -67,9 +76,16 @@ void infrared_init(){
 	DDRC &= ~((1<<7)|(1<<6));	// Set PC0-5 to input
 }
 
-int8_t infrared_getMap(void){
+uint8_t infrared_activeMap(void){
 // Function to get a map locating where
 // around the periphery object are detected.
-	pollInfrared();
-	return bin_map;
+	pollInfrared(1);
+	return activeMap;
+}
+
+uint8_t infrared_passiveMap(void){
+// Function to return a map of where
+// external IR signals are being detected
+	pollInfrared(0);
+	return passiveMap;
 }

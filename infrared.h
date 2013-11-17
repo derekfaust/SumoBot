@@ -20,6 +20,10 @@ void infrared_init();
 
 // Function to get a map locating where
 // around the periphery object are detected.
-int8_t infrared_getMap();
+uint8_t infrared_activeMap();
+
+// Function to get a map locating where
+// around the periphery stay IR is detected
+uint8_t infrared_passiveMap();
 
 #endif
