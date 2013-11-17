@@ -11,10 +11,8 @@
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
-#define PULSE_LENGTH 100	// Pulse length in # of periods
-#define NUM_ZONES 2			// Number of zones
-#define NUM_IR 6			// Number of IR sensors
-#define SMOOTHING_FACTOR .7	// Smoothing factor
+#define HALF_PERIOD 13		// Half the period of the pulse
+#define PULSE_LENGTH 100	// Number of periods to pulse
 
 //Include standard libraries
 #include <stdint.h>			// For standard data types	
@@ -25,8 +23,6 @@
 #include "infrared.h"		// Include own header file
 
 // Define array of half-periods (closest range first)
-static uint8_t half_period=13;
-static uint8_t activeMap;
 static uint8_t activeMap;
 static uint8_t passiveMap;
 
@@ -39,19 +35,15 @@ void pollInfrared(uint8_t active){
 
 	if(active){
 		// Pulse the output port
+		
 		uint8_t iter_pulse; 			// Initialize iteration variable
-		uint8_t iter_period;
 
 		// Loop for the number of periods in the pulse
 		for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
 			PORTD |= (1<<7);				// Turn on the LEDs
-			for (iter_period = 0; iter_period<half_period; iter_period++){
-				_delay_us (1);				// Wait half the period
-			}
+			_delay_us(HALF_PERIOD);			// Wait half the period
 			PORTD &= ~(1<<7);				// Turn off the LEDs
-			for (iter_period = 0; iter_period<half_period; iter_period++){
-				_delay_us (1);				// Wait half the period
-			}
+			_delay_us(HALF_PERIOD);			// Wait half the period
 		}
 			
 		// Record the received pulses from
