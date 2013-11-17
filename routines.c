@@ -21,11 +21,6 @@
 // Constants
 #define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
 
-//Definitions
-static int8_t dirTravel;
-static int8_t dirTurn;
-
-
 /* Begin Global Functions here
  * ==========================
  *
@@ -48,11 +43,12 @@ int8_t routines_search(void){
 			
 		}
 		
-		if (qti_touchingBounds == dirTravel){
+		if (qti_touchingBounds == motor_dirTravel){
 			// If a boundary is detected in the direction of travel
 			// Reverse direction of travel and turning
+			motor_setSpeed(-motor_currentSpeed[1],motor_currentSpeed[0]);
 
-		}else if(qti_touchingBounds == -dirTravel){
+		}else if(qti_touchingBounds == -motor_dirTravel){
 			// If a boundary is detected opposite the direction of travel
 			// Then we are being pushed out of the ring
 
@@ -60,7 +56,7 @@ int8_t routines_search(void){
 		}
 	}
 
-	if(objDetected == -dirTravel){
+	if(objDetected == -motor_dirTravel){
 		// If the object is detected opposite the direction of travel
 			if (sonar_getDistance(0xFF)<MOMENTUM_SWITCH_DIST){
 				// If the the opponent is to close to reverse direction
