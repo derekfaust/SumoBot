@@ -20,6 +20,8 @@
 
 // Constants
 #define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
+#define MAX_TRACKING_MISSES 5	// Number of times the object isn't seen before
+								// We give up and go back to searching
 
 /* Begin Global Functions here
  * ==========================
@@ -46,7 +48,7 @@ int8_t routines_search(void){
 		if (qti_touchingBounds == motor_dirTravel){
 			// If a boundary is detected in the direction of travel
 			// Reverse direction of travel and turning
-			motor_setSpeed(-motor_currentSpeed[1],motor_currentSpeed[0]);
+			motor_setSpeed(-motor_currentSpeed[1],-motor_currentSpeed[0]);
 
 		}else if(qti_touchingBounds == -motor_dirTravel){
 			// If a boundary is detected opposite the direction of travel
@@ -77,6 +79,40 @@ int8_t routines_search(void){
 
 // Operate the robot in attack mode
 int8_t routines_attack(int8_t direction){
+
+	// Charge the opponent
+	motor_setSpeed(3*direction,3*direction);
+
+	// Initialize the variable showing where the object was seen
+	uint8_t missCounter = 0;
+	uint8_t boundCounter = 0;
+	
+	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
+		// While we haven't lost sight of the opponent 5 or more times
+		if(sonar_getRegion()!=direction){
+			// Check if the object is in the direction we're charging
+			// If it's not, count a miss.
+			missCounter++;
+		}
+		if(qti_touchingBounds){
+			// Increment the bound counter if we see a bound
+			// This is meant to stray signals
+			boundCounter++;
+		}
+			
+	}
+	if(qti_touchingBounds){
+		// If a bound was touched
+		if(qti_touchingBounds==direction){
+			// If a bound was touched on the pushing side
+			// Opponent should be out of the ring
+
+		}else if(qti_touchingBounds==-direction){
+			// If a bound was touched on the back side
+			// We're being pushed out, try to spin out.
+
+		}
+	}
 }
 
 // Avoid being rear-ended
