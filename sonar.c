@@ -86,7 +86,7 @@ uint16_t getTimer(void){
 void pollSonar(void){
 // Polls the next sensor if none are polling
 
-	if ((pulseRecieved == NUM_SONAR)||(getTimer()>MAX_PULSE)){
+	if ((pulseReceived == NUM_SONARS)||(getTimer()>MAX_PULSE)){
 		// If no sonars are polling or if time has been exceeded
 
 		//Send trigger pulse to start sonar measurement on multiple sonars
