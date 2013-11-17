@@ -24,11 +24,11 @@ uint8_t sonar_getDistance(uint8_t sonarnum);
 
 // Function to get which region and object is detected in.
 int8_t sonar_getRegion();
-/* region 	[0,3]:
+/* region 	[-1,1] or 127:
  * Nothing	0
  * Front	1
- * Back		2
- * Both		3
+ * Back		-1
+ * Both		0
  */
 
 #endif

@@ -207,11 +207,11 @@ int8_t sonar_getRegion(void){
 			break;
 		case (1<<1):
 			// Back Detect
-			region = 2;
+			region = -1;
 			break;
 		case (1<<1)|(1<<0):
 			//Front and back Detect
-			region = 3;
+			region = 0;
 			break;
 	}
 	return region;
