@@ -15,10 +15,14 @@
 // Include standard libraries
 #include <stdint.h>			// For data types
 
+//Define variables
+static volatile uint8_t qti_touchingBounds;
+/* Bit	Location
+ * 0	Front
+ * 1	Back
+ */
+
 // Function to initialize all QTI sensors.
 void qti_init(void);
-
-// Function to pass where bounds are being touched.
-uint8_t qti_touchingBounds(void);
 
 #endif

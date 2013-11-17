@@ -19,6 +19,7 @@
 
 // Include local headers
 #include "motor.h"			// Motor control to stop motors
+#include "qti.h"			// Own header file
 
 /* Connection Details
  * Pin	Sensor Placement
@@ -27,9 +28,6 @@
  * PD1	Front
  * PD2	Back
  */
-
-//Define variables
-static volatile uint8_t touchingBounds;
 
 /* Begin Internal Functions Here
  * =============================
@@ -61,11 +59,11 @@ ISR(PCINT2_vect){
 	}
 	if ((PIND>>1)&1){
 		// Set zeroth bit if front is touching
-		touchingBounds |= (1<<0);
+		qti_touchingBounds |= (1<<0);
 	}
 	if ((PIND>>2)&1){
 		// Set first bit if back is touching
-		touchingBounds |= (1<<1);	
+		qti_touchingBounds |= (1<<1);	
 	}
 
 }
@@ -86,10 +84,4 @@ void qti_init(void){
 	PCMSK2 |= (1<<0)|(1<<1)|(1<<2);
 	// Enable interrupts globally
 	sei();
-}
-
-uint8_t qti_touchingBounds(void){
-// Pass where robot is touching bounds to
-// the main program loop
-	return touchingBounds;
 }
