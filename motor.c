@@ -30,6 +30,7 @@
 //Define variables
 static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
 static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
+static uint8_t currentSpeed[2];
 
 void motor_init(void){
 // Function to initialize PWM
@@ -107,5 +108,11 @@ void motor_setSpeed(uint8_t motornum, int8_t speed){
 			OCR2B = setpt-DEAD_TIME;
 			break;
 		}
+		currentSpeed[motornum] = speed;
 	}
+}
+
+uint8_t motor_getSpeed(uint8_t motornum){
+// Function to return the current speed of a given motor
+	return currentSpeed[motornum];
 }

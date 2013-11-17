@@ -30,4 +30,10 @@ void motor_setSpeed(uint8_t motornum, int8_t speed);
  * full forward  3
  */
 
+// Function to get motor speed
+uint8_t motor_getSpeed(uint8_t motornum);
+/* motor numbers and speeds are the same as
+ * in the setSpeed function
+ */
+
 #endif
