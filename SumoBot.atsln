@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SumBot", "SumoBot.cproj", "{7956FDD0-EFAA-4A59-882F-D111DEA04AF8}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "SumoBot", "SumoBot.cproj", "{7956FDD0-EFAA-4A59-882F-D111DEA04AF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
