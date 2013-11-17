@@ -18,6 +18,7 @@
 // Global Variables
 extern int8_t motor_dirTurn;
 extern int8_t motor_dirTravel;
+extern int8_t motor_currentSpeed[2];
 
 // Function to initialize PWM
 void motor_init(void);
@@ -28,12 +29,6 @@ void motor_setSpeed(int8_t speed0, int8_t speed1);
  * full reverse	-3
  * stopped		 0
  * full forward  3
- */
-
-// Function to get motor speed
-uint8_t motor_getSpeed(uint8_t motornum);
-/* Motor numbers and speeds are the same as
- * in the setSpeed function
  */
 
 #endif

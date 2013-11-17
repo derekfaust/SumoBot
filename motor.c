@@ -30,7 +30,7 @@
 //Define variables
 static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
 static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
-static uint8_t currentSpeed[2];
+int8_t motor_currentSpeed[2]={0,0};
 int8_t motor_dirTurn=0;
 int8_t motor_dirTravel=0;
 
@@ -107,8 +107,8 @@ void motor_setSpeed(int8_t speed0, int8_t speed1){
 	OCR2B = setpt1-DEAD_TIME;
 	
 	// Record the speed values
-	currentSpeed[0] = speed0;
-	currentSpeed[1] = speed1;
+	motor_currentSpeed[0] = speed0;
+	motor_currentSpeed[1] = speed1;
 
 	// Record direction
 	motor_dirTurn = 0;
@@ -133,9 +133,4 @@ void motor_setSpeed(int8_t speed0, int8_t speed1){
 		// Moving Backwards
 		motor_dirTravel = -1;
 	}
-}
-
-uint8_t motor_getSpeed(uint8_t motornum){
-// Function to return the current speed of a given motor
-	return currentSpeed[motornum];
 }
