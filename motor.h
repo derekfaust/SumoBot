@@ -36,11 +36,4 @@ uint8_t motor_getSpeed(uint8_t motornum);
  * in the setSpeed function
  */
 
-// Function to get turning direction
-int8_t motor_getDirection(void);
-/* Staight	0
- * Left		-1
- * Right	1
- */
-
 #endif
