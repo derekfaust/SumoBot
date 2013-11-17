@@ -111,6 +111,12 @@
     <Compile Include="qti.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="routines.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="routines.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="serial.h">
       <SubType>compile</SubType>
     </Compile>
