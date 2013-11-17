@@ -32,7 +32,23 @@
 
 // Operate the robot in search mode
 int8_t routines_search(void){
-	int8_t objDetected = 0;		// Initialize object detection variable
+
+	// Initialize object detection variable
+	int8_t objDetected = 0;
+
+	// Copy travel direction
+	int8_t direction = motor_dirTravel;
+
+	// Determine which direction to move
+	if(motor_dirTurn == 1){
+		// If turning left, keep turning left
+		motor_setSpeed(2*direction,3*direction);
+	}else{
+		// If turning right, keep turning right
+		motor_setSpeed(3*direction,2*direction);
+	}
+
+	
 	while (!objDetected){
 		// While no object is detected,
 		// Keep searching and switch directions when necessary
