@@ -16,7 +16,7 @@
 #include <stdint.h>			// For data types
 
 //Define variables
-static volatile int8_t qti_touchingBounds;
+extern volatile int8_t qti_touchingBounds;
 /* Location
  * Front	1
  * Back		-1

@@ -29,6 +29,9 @@
  * PD2	Back
  */
 
+// Variable definitions
+volatile int8_t qti_touchingBounds=0;
+
 /* Begin Internal Functions Here
  * =============================
  *
