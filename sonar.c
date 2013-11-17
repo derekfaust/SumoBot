@@ -25,8 +25,6 @@
 #include "sonar.h"			// Header for this file
 
 //Define global variables
-static volatile int8_t pollingSonar = -1;		// Notes which sonar is polling
-static volatile int8_t lastPolled = -1;			// Notes the last sonar to poll
 static volatile uint16_t distance[NUM_SONARS];	// Record distances sonars
 static volatile uint8_t pulseStarted;			// Record if input pulse has started
 static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
@@ -43,7 +41,7 @@ ISR(PCINT0_vect){
 // Hard-coded to use PCINT0 and TIMER1
 	
 	//Stopping interrupts not necessary b.c interrupts stop before ISR
-	unsigned int timervalue = TCNT1;	//Record timer value to i
+	uint8_t timervalue = TCNT1;	//Record timer value to i
 
 	// If waiting for pulse to end and pin is low, bit is 1
 	uint8_t pulseEnded = pulseStarted & (~PINB);
@@ -135,31 +133,15 @@ uint16_t sonar_getDistance(uint8_t sonarnum){
 		// then return the distance from that sensor
 		return distance[sonarnum];
 	}else{
-		// Otherwise, find the average of all sensors that detect and object
-
-		// Find number of sensors that detected something
-		uint32_t sum = 0;		// Initialize sum of the distances to zero
-		uint8_t numDetect = 0;	// Number of sonars detecting something
-		uint8_t i;				// Iteration variable
-		for(i=0;i<NUM_SONARS;i++){
-			if(distance[i]<DETECT_THRESHOLD){
-				// If object is detected by a given sensor:
-				numDetect++;		//Increment number detected
-				sum += distance[i];	//Add distance to the sum
+		// Otherwise, return the smallest value
+		uint8_t iter_sonar;
+		uint16_t minDist = distance[0];
+		for(iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
+			if (distance[iter_sonar]<minDist){
+				minDist = distance[iter_sonar];
 			}
 		}
-
-		// Calculate and return average
-		if(numDetect == 0 || numDetect == 1){
-			// If zero or one sensors detect something, return sum
-			return (uint16_t) sum;
-		}else if(numDetect==2){
-			// Division by two can be represented by a bitshift
-			return (uint16_t) (sum>>1);
-		}else{
-			// Otherwise, do the division
-			return (uint16_t) (sum/numDetect);
-		}
+		return minDist;
 	}
 }
 
@@ -172,7 +154,7 @@ int8_t sonar_getRegion(void){
 
 	// Map which sonars detected an object
 	uint8_t detectMap=0;	// Map of hits
-	uint8_t i;			// Iteration variable
+	uint8_t i;				// Iteration variable
 	for(i=0;i<NUM_SONARS;i++){
 		if(distance[i]<DETECT_THRESHOLD){
 			// Set bit if sonar detected something
@@ -181,35 +163,19 @@ int8_t sonar_getRegion(void){
 	}
 
 	// Translate hits on individual sensors to a region
-	/* This block of code assumes that there are three sonars
-	 * such that sonar0 is in the center, sonar 1 is left, and
-	 * sonar 2 is right.
-	 */
-	int8_t region=-8;
+	int8_t region=0;
 	switch (detectMap){
 		case (1<<0):
-			// Center Detect
-			region = 0;
-			break;
-		case (1<<2):
-			// Right Detect
-			region = 2;
-			break;
-		case (1<<1):
-			// Left Detect
-			region = -2;
-			break;
-		case (1<<2)|(1<<0):
-			//Center Right Detect
+			// Front Detect
 			region = 1;
 			break;
-		case (1<<1)|(1<<0):
-			//Center Left Detect
-			region = -1;
+		case (1<<1):
+			// Back Detect
+			region = 2;
 			break;
-		case (1<<0)|(1<<1)|(1<<2):
-			//All Detect
-			region = 8;
+		case (1<<1)|(1<<0):
+			//Front and back Detect
+			region = 3;
 			break;
 	}
 	return region;
