@@ -22,6 +22,8 @@
 #define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
 #define MAX_TRACKING_MISSES 5	// Number of times the object isn't seen before
 								// We give up and go back to searching
+#define MAX_TRACKING_BOUNDS 5	// Number of times the bounds are seen before
+								// We give know it's not a glitch.
 #define SPINOFF_COUNT 1024		// Number of counts to execute a spinoff
 #define EVADE_COUNT 1024		// Number of counts to execute an evade maneuver
 
@@ -73,7 +75,7 @@ void routines_search(void){
 			// Then we are being pushed out of the ring
 
 			// Perform routine in attempt to spin off
-			routine_spinOff(-qti_touchingBounds);
+			routines_spinOff(-qti_touchingBounds);
 		}
 	}
 
