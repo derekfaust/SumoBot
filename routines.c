@@ -22,6 +22,8 @@
 #define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
 #define MAX_TRACKING_MISSES 5	// Number of times the object isn't seen before
 								// We give up and go back to searching
+#define SPINOFF_COUNT 1024		// Number of counts to execute a spinoff
+#define EVADE_COUNT 1024		// Number of counts to execute an evade maneuver
 
 /* Begin Global Functions here
  * ==========================
@@ -115,7 +117,49 @@ int8_t routines_attack(int8_t direction){
 	}
 }
 
-// Avoid being rear-ended
+// Avoid being rear-ended if we don't have time to reverse momentum
 void routines_evade(int8_t direction){
+	// Determine how to execute the spin
+	if(motor_dirTurn == 1){
+		// If turning left, hold left motor back slightly
+		// to make the turn sharper
+		motor_setSpeed(direction,3*direction);
+	}else{
+		// If turning right, hold right motor back slightly
+		// to make the turn sharper
+		motor_setSpeed(3*direction,direction);
+	}
 
+	// Wait the correct amount of time.
+	uint16_t spinCounter = 0;
+	for(spinCounter=0; spinCounter<EVADE_COUNT; spinCounter++){
+		// For the specified number of counts, complete the turn.
+
+		//Keep polling sensors so we have current data when we're done
+		sonar_getDistance(0);
+	}
+}
+
+// Torero move to avoid being pushed out
+void routines_spinOff(int8_t direction){
+
+	// Determine how to execute the spin
+	if(motor_dirTurn == 1){
+		// If turning left, set left motor back slightly
+		// and set right to max
+		motor_setSpeed(-direction,3*direction);
+	}else{
+		// If turning right, set right motor back slightly
+		// and set left to max
+		motor_setSpeed(3*direction,-direction);
+	}
+
+	// Wait the correct amount of time.
+	uint16_t spinCounter = 0;
+	for(spinCounter=0; spinCounter<SPINOFF_COUNT; spinCounter++){
+		// For the specified number of counts, complete the turn.
+
+		//Keep polling sensors so we have current data when we're done
+		sonar_getDistance(0);
+	}
 }
