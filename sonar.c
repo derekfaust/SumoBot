@@ -46,7 +46,7 @@ ISR(PCINT0_vect){
 	unsigned int timervalue = TCNT1;	//Record timer value to i
 
 	// If waiting for pulse to end and pin is low, bit is 1
-	uint8_t pulseEnded = pulseStarted & (~PINB)
+	uint8_t pulseEnded = pulseStarted & (~PINB);
 	
 	/* Note: If the rising edge of the second sensor is caught,
 	 * neither line will be low and pulseEnded will be 0
@@ -55,11 +55,12 @@ ISR(PCINT0_vect){
 		if ((pulseEnded>>pinnum[0])&1){			// If first sonar pulse ends
 			distance[0] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[0]);	// No Longer Polling this Sonar
-			pulseReceived++;					// Note that the pulse was recieved
+			pulseReceived++;					// Note that the pulse was received
 		}else if ((pulseEnded>>pinnum[1])&1){	// If second sonar pulse ends
 			distance[1] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[1]);	// No Longer Polling this Sonar
-			pulseReceived++;					// Note that the pulse was recieved
+			pulseReceived++;					// Note that the pulse was received
+		}
 	}else{
 		// Reset the timer
 		TCNT1 = 0;
@@ -73,7 +74,7 @@ uint16_t getTimer(void){
 
 	uint8_t sreg;	// Initialize variables
 	uint16_t time;
-	sreg = SREG;	// Store interrupt regist state
+	sreg = SREG;	// Store interrupt register state
 	cli();			// Disable interrupts
 	time = TCNT1;	// Read timer value
 	SREG = sreg;	// Restore interrupt states
@@ -83,7 +84,7 @@ uint16_t getTimer(void){
 void pollSonar(void){
 // Polls the next sensor if none are polling
 
-	if ((pulseRecieved == NUM_SONAR)||(getTimer()>MAX_PULSE)){
+	if ((pulseReceived == NUM_SONARS)||(getTimer()>MAX_PULSE)){
 		// If no sonars are polling or if time has been exceeded
 
 		//Send trigger pulse to start sonar measurement on multiple sonars
@@ -163,7 +164,7 @@ uint16_t sonar_getDistance(uint8_t sonarnum){
 }
 
 
-int8_t sonar_getRegion(){
+int8_t sonar_getRegion(void){
 // Return the region that an object is detected in
 	
 	//Trigger sonar poll
@@ -184,7 +185,7 @@ int8_t sonar_getRegion(){
 	 * such that sonar0 is in the center, sonar 1 is left, and
 	 * sonar 2 is right.
 	 */
-	uint8_t region=-8;
+	int8_t region=-8;
 	switch (detectMap){
 		case (1<<0):
 			// Center Detect
