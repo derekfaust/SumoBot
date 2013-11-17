@@ -23,7 +23,7 @@ void infrared_init();
 uint8_t infrared_activeMap();
 
 // Function to get a map locating where
-// around the periphery stay IR is detected
+// around the periphery stray IR is detected
 uint8_t infrared_passiveMap();
 
 #endif
