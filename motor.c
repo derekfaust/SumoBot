@@ -32,6 +32,11 @@ static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
 static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
 static uint8_t currentSpeed[2];
 
+/* Begin Global Functions here
+ * ==========================
+ *
+ */
+
 void motor_init(void){
 // Function to initialize PWM
 	
@@ -115,4 +120,19 @@ void motor_setSpeed(uint8_t motornum, int8_t speed){
 uint8_t motor_getSpeed(uint8_t motornum){
 // Function to return the current speed of a given motor
 	return currentSpeed[motornum];
+}
+
+int8_t motor_getDirection(void){
+// Function to return what direction the robot is currently turning
+	int8_t direction = 0;
+	if (currentSpeed[0] < currentSpeed[1]){
+		// If left is slower than right
+		// Robot is turning left
+		direction = -1;
+	}else if (currentSpeed[0] > currentSpeed[1]){
+		// If right is slower than left
+		// Robot is turning right
+		direction = 1;
+	}
+	return direction;
 }

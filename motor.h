@@ -32,8 +32,15 @@ void motor_setSpeed(uint8_t motornum, int8_t speed);
 
 // Function to get motor speed
 uint8_t motor_getSpeed(uint8_t motornum);
-/* motor numbers and speeds are the same as
+/* Motor numbers and speeds are the same as
  * in the setSpeed function
+ */
+
+// Function to get turning direction
+int8_t motor_getDirection(void);
+/* Staight	0
+ * Left		-1
+ * Right	1
  */
 
 #endif
