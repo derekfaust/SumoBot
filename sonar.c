@@ -43,7 +43,7 @@ ISR(PCINT0_vect){
 // Hard-coded to use PCINT0 and TIMER1
 	
 	//Stopping interrupts not necessary b.c interrupts stop before ISR
-	uint8_t timervalue = TCNT1;	//Record timer value to i
+	uint16_t timervalue = TCNT1;	//Record timer value
 
 	// If waiting for pulse to end and pin is low, bit is 1
 	uint8_t pulseEnded = pulseStarted & (~PINB);
