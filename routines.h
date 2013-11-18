@@ -27,4 +27,7 @@ void routines_evade(int8_t direction);
 // Torero move to avoid being pushed out
 void routines_spinOff(int8_t direction);
 
+// Do a victory dance
+void routines_victoryDance(int8_t direction);
+
 #endif

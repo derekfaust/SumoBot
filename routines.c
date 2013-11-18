@@ -8,8 +8,14 @@
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
 
+// Definitions
+#ifndef F_CPU
+#define F_CPU 16000000UL
+#endif
+
 //Include standard headers
 #include <stdint.h>			// For data types
+#include <util/delay.h>		// For delays in victory dance
 
 //Include Local Headers
 #include "routines.h"		// Header for this file
@@ -17,6 +23,7 @@
 #include "sonar.h"			// For sonar sensing
 #include "infrared.h"		// For infrared sensing
 #include "qti.h"			// For border sensing
+#include "indicator.h"		// For LED and buzzer control
 
 // Constants
 #define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
@@ -26,6 +33,7 @@
 								// We give know it's not a glitch.
 #define SPINOFF_COUNT 1024		// Number of counts to execute a spinoff
 #define EVADE_COUNT 1024		// Number of counts to execute an evade maneuver
+#define BACKUP_COUNT 1024		// Number of counts to back away from edge
 
 /* Begin Global Functions here
  * ==========================
@@ -183,4 +191,27 @@ void routines_spinOff(int8_t direction){
 		//Keep polling sensors so we have current data when we're done
 		sonar_getDistance(0);
 	}
+}
+
+// Do a victory dance
+void routines_victoryDance(int8_t direction){
+	
+	// Backup from the edge of the circle
+	motor_setSpeed(3*direction, 3*direction);
+
+	// Keep backing up until the count is done
+	uint16_t i_backup;		// Initialize iterator
+	for(i_backup=0; i_backup<BACKUP_COUNT; i_backup++){
+		_delay_us(5);
+	}
+
+	// Start spinning around
+	motor_setSpeed(1,-1);
+
+	while(1){
+		indicator_beep(); 			// Beep
+		_delay_ms(200);				// Wait
+		indicator_greenFlash(50);	// Flash
+		_delay_ms(200);				// Wait
+	}								// Repeat
 }
