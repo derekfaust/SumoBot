@@ -22,6 +22,20 @@
 // Include local modules
 #include "infrared.h"		// Include own header file
 
+// Define Connections
+#define IR_OUT 4
+
+/* Connection Details
+ * Pin	Sensor Placement
+ * ---------------------
+ * PC4	IR Output
+ * PC0	Front Left	
+ * PC1	Front Right
+ * PC2	Back Left
+ * PC3	Back Right
+ */
+
+
 // Define array of half-periods (closest range first)
 static uint8_t activeMap;
 static uint8_t passiveMap;
@@ -40,19 +54,19 @@ void pollInfrared(uint8_t active){
 
 		// Loop for the number of periods in the pulse
 		for (iter_pulse = 0; iter_pulse<PULSE_LENGTH; iter_pulse++){
-			PORTD |= (1<<7);				// Turn on the LEDs
+			PORTC |= (1<<IR_OUT);			// Turn on the LEDs
 			_delay_us(HALF_PERIOD);			// Wait half the period
-			PORTD &= ~(1<<7);				// Turn off the LEDs
+			PORTC &= ~(1<<IR_OUT);			// Turn off the LEDs
 			_delay_us(HALF_PERIOD);			// Wait half the period
 		}
 			
 		// Record the received pulses from
-		// the first 6 registers in port c
-		activeMap = (~PINC)|0x01;
+		// the first 4 registers in port c
+		activeMap = (~PINC)|0x0F;
 	}else{
 		// Record which sensors are recieving
 		// Stray IR signals
-		passiveMap = (~PINC)|0x01;
+		passiveMap = (~PINC)|0x0F;
 	}
 }
 
@@ -64,8 +78,8 @@ void pollInfrared(uint8_t active){
 void infrared_init(){
 // Function to initialize all IR sensors.
 	
-	DDRD |= (1<<7);				// Set PD7 to output
-	DDRC &= ~((1<<7)|(1<<6));	// Set PC0-5 to input
+	DDRC |= (1<<IR_OUT);	// Set IR output pin to output
+	DDRC &= 0xF0;			// Set PC0-5 to input
 }
 
 uint8_t infrared_activeMap(void){
