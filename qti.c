@@ -19,6 +19,7 @@
 
 // Include local headers
 #include "motor.h"			// Motor control to stop motors
+#include "indicator.h"		// Indicator control
 #include "qti.h"			// Own header file
 
 /* Connection Details
@@ -50,11 +51,9 @@ ISR(PCINT2_vect){
 			// Turn Motors off
 			motor_setSpeed(0,0);
 
-			//Initialize LED
-			DDRB |= (1<<5);
 			while (1){
 				//Blink LED indefinitely
-				PORTB ^= (1<<5);
+				indicator_redFlash(250);
 				_delay_ms(250);
 			}
 		}
