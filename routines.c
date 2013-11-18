@@ -75,7 +75,7 @@ void routines_search(void){
 			// Then we are being pushed out of the ring
 
 			// Perform routine in attempt to spin off
-			routines_spinOff(-qti_touchingBounds);
+			routines_spinOff(qti_touchingBounds);
 		}
 	}
 
