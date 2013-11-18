@@ -49,7 +49,6 @@ ISR(PCINT2_vect){
 			
 			// Turn Motors off
 			motor_setSpeed(0,0);
-			motor_setSpeed(0,1);
 
 			//Initialize LED
 			DDRB |= (1<<5);
