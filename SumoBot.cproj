@@ -93,6 +93,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="indicator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="indicator.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="infrared.c">
       <SubType>compile</SubType>
     </Compile>
