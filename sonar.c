@@ -67,7 +67,8 @@ ISR(PCINT0_vect){
 		// Reset the timer
 		TCNT1 = 0;
 		// Set the pulse as started on both sonars
-		pulseStarted = PINB & ((1<<pinnum[0])|(1<<pinnum[1]));
+		pulseStarted = ((1<<pinnum[0])|(1<<pinnum[1]));
+		pulseReceived=0;
 	}
 }
 
