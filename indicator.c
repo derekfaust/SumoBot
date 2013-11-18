@@ -18,7 +18,7 @@
 // Interface pins
 #define GREEN_PIN 4				// PB# for green LED
 #define RED_PIN 5				// PB# for red LED
-#define BUZZER_PIN 4			// PD# for Buzzer
+#define BUZZER_PIN 5			// PC# for Buzzer
 
 //Include standard libraries
 #include <stdint.h>			// For standard data types	
@@ -34,7 +34,7 @@
 // Function to initialize indicator pins
 void indicator_init(void){
 	// Set buzzer pin to output
-	DDRD |= (1<<BUZZER_PIN);
+	DDRC |= (1<<BUZZER_PIN);
 	// Set LED pins to outputs
 	DDRB |= (1<<RED_PIN)|(1<<GREEN_PIN);
 }
@@ -47,12 +47,12 @@ void indicator_beep(void){
 
 	for(i_beep=0;i_beep<BEEP_LENGTH;i_beep++){
 		// For the length of the beep
-		PORTD ^= (1<<BUZZER_PIN);		// Toggle the state of the pin
+		PORTC ^= (1<<BUZZER_PIN);		// Toggle the state of the pin
 		for(i_period=0;i_period<BEEP_HALF_PERIOD;i_period++){
 			_delay_us(1);	// Delay for half the period
 		}
 	}
-	PORTD &= ~(1<<BUZZER_PIN);	//Ensure that the pin ends low
+	PORTC &= ~(1<<BUZZER_PIN);	//Ensure that the pin ends low
 }
 
 // Function to flash the green LED
