@@ -22,12 +22,17 @@
 #include "indicator.h"		// Indicator control
 #include "qti.h"			// Own header file
 
+// Define Connections
+#define CENTER_QTI 2
+#define FRONT_QTI 4
+#define BACK_QTI 7
+
 /* Connection Details
  * Pin	Sensor Placement
  * ---------------------
- * PD0	Center
- * PD1	Front
- * PD2	Back
+ * PD2	Center
+ * PD4	Front
+ * PD7	Back
  */
 
 // Variable definitions
@@ -42,10 +47,10 @@ ISR(PCINT2_vect){
 // ISR to detect out-of-bounds
 
 	//If center QTI detects white 
-	if ((PIND>>0)&1){
+	if ((~PIND>>CENTER_QTI)&1){
 		_delay_us(500);
 		//Check again after short wait
-		if ((PIND>>0)&1){
+		if ((~PIND>>CENTER_QTI)&1){
 			// Accept defeat
 			
 			// Turn Motors off
@@ -59,10 +64,10 @@ ISR(PCINT2_vect){
 		}
 	}
 	qti_touchingBounds = 0;
-	if ((PIND>>1)&1){
+	if ((~PIND>>FRONT_QTI)&1){
 		// Set to 1 if front is touching
 		qti_touchingBounds = 1;
-	}else if ((PIND>>2)&1){
+	}else if ((~PIND>>BACK_QTI)&1){
 		// Set to -1 if back is touching
 		qti_touchingBounds = -1;	
 	}
@@ -77,11 +82,11 @@ void qti_init(void){
 // Initialize all QTI sensors
 
 	// Ensure that pins are set to input
-	DDRD &= ~((1<<0)|(1<<1)|(1<<2));
+	DDRD &= ~((1<<CENTER_QTI)|(1<<FRONT_QTI)|(1<<BACK_QTI));
 	// Enable PCINT2
-	PCICR |= (1<<2);
+	PCICR |= (1<<CENTER_QTI);
 	// Allow first 3 pins to trigger interrupt
-	PCMSK2 |= (1<<0)|(1<<1)|(1<<2);
+	PCMSK2 |= ((1<<CENTER_QTI)|(1<<FRONT_QTI)|(1<<BACK_QTI));
 	// Enable interrupts globally
 	sei();
 }
