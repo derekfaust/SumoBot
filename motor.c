@@ -55,7 +55,6 @@ void motor_init(void){
 
 	//Set Initial Speed
 	motor_setSpeed(0, 0);
-	motor_setSpeed(1, 0);
 
 	// Set prescalar to 8
 	TCCR0B |= (1<<CS01);
