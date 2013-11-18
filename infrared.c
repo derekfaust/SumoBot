@@ -48,11 +48,11 @@ void pollInfrared(uint8_t active){
 			
 		// Record the received pulses from
 		// the first 6 registers in port c
-		activeMap = (~PINC)|0x3F;
+		activeMap = (~PINC)|0x01;
 	}else{
 		// Record which sensors are recieving
 		// Stray IR signals
-		passiveMap = (~PINC)|0x3F;
+		passiveMap = (~PINC)|0x01;
 	}
 }
 
