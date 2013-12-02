@@ -16,7 +16,7 @@
 #include "motor.h"			// Header for this file
 
 //Definitions
-#define DEAD_TIME 1			// Define PWM dead time
+#define DEAD_TIME 2 		// Define PWM dead time
 
 /* Connection details
  * Pin		Side	Direction	
