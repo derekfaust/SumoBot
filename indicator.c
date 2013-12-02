@@ -11,8 +11,8 @@
 #ifndef F_CPU
 #define F_CPU 16000000UL
 #endif
-#define BEEP_HALF_PERIOD 13		// Half the period of the buzzer
-#define BEEP_LENGTH 100			// Number of periods to pulse buzzer
+#define BEEP_HALF_PERIOD 125		// Half the period of the buzzer
+#define BEEP_LENGTH 1000			// Number of periods to pulse buzzer
 								// to make a crisp beep
 
 // Interface pins
@@ -42,7 +42,7 @@ void indicator_init(void){
 // Function to make the buzzer beep
 void indicator_beep(void){
 	// Initialize iterators
-	uint8_t i_beep;	
+	uint16_t i_beep;	
 	uint8_t i_period;
 
 	for(i_beep=0;i_beep<BEEP_LENGTH;i_beep++){
