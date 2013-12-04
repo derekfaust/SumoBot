@@ -69,8 +69,6 @@ void routines_search(void){
 			// Get sonar measurement
 			objDetected = sonar_getRegion();
 
-			// Use IR sensors too
-			
 		}
 		
 		if (motor_dirTravel != 0){
