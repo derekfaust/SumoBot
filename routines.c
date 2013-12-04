@@ -125,7 +125,7 @@ void routines_attack(int8_t direction){
 	
 	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
 		// While we haven't lost sight of the opponent 5 or more times
-		if(sonar_getRegion()!=direction){
+		if((sonar_getRegion()!=direction) && sonar_isNewDist(direction)){
 			// Check if the object is in the direction we're charging
 			// If it's not, count a miss.
 			missCounter++;
