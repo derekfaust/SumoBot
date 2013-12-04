@@ -18,6 +18,9 @@
 // Function to initialize all sonar.
 void sonar_init();
 
+// Returns true if there is a new distance measurement in a given direction.
+uint8_t sonar_isNewDist(int8_t direction);
+
 // Function to retrieve distance value from one sonar
 // or the closest from all of them
 uint8_t sonar_getDistance(uint8_t sonarnum);

@@ -28,6 +28,7 @@
 //Define global variables
 static volatile uint16_t distance[NUM_SONARS];	// Record raw timer values for sonars
 static uint8_t dist8[NUM_SONARS];				// 8-bit distances values for sonars
+static uint8_t newDist;							// Flags indicating a new measurement
 static volatile uint8_t pulseStarted;			// Record if input pulse has started
 static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
 static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
@@ -51,16 +52,19 @@ ISR(PCINT0_vect){
 	/* Note: If the rising edge of the second sensor is caught,
 	 * neither line will be low and pulseEnded will be 0
 	 */
-	if (pulseStarted){							// If waiting for a sensor
+	if (pulseStarted){
+		// If waiting for a sensor
 		if ((pulseEnded>>pinnum[0])&1){			// If first sonar pulse ends
 			distance[0] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[0]);	// No Longer Polling this Sonar
 			pulseReceived++;					// Note that the pulse was received
+			newDist |= (1<<0);					// Note a new measurement
 
 		}else if ((pulseEnded>>pinnum[1])&1){	// If second sonar pulse ends
 			distance[1] = timervalue;			// Record Timer Value
 			pulseStarted &= ~(1<<pinnum[1]);	// No Longer Polling this Sonar
 			pulseReceived++;					// Note that the pulse was received
+			newDist |= (1<<1);					// Note a new measurement
 		}
 
 	}else{
@@ -136,6 +140,31 @@ void sonar_init(void){
 	TCCR1B |= (1<<1|1<<0); TCCR1B &= ~(1<<2);
 }
 
+uint8_t sonar_isNewDist(int8_t direction){
+// Returns true if there is a new distance measurement in a given direction.
+	uint8_t newFlag;
+	switch (direction) {
+	case -1:
+		// If direction is behind, return back sensor value
+		newFlag = ((newDist >> 1) & 1);	// Save Value
+		newDist &= ~(1<<1);				// Reset Value
+		return newFlag;					// Return Value
+		break;
+	case 1:
+		// If direction is forward, return front sensor value
+		newFlag = ((newDist >> 0) & 1);	// Save Value
+		newDist &= ~(1<<0);				// Reset Value
+		return newFlag;					// Return Value
+		break;
+	default:
+		// If direction is not specified, either will work.
+		newFlag = newDist;				// Save Value
+		newDist &= ~((1<<0)|(1<<1));	// Reset Flags
+		return newFlag;					// Return Value
+		break;
+	}
+
+}
 
 uint8_t sonar_getDistance(uint8_t sonarnum){
 // Trigger polling and return distance of object
