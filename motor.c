@@ -28,8 +28,8 @@
  */
 
 //Define variables
-static uint8_t rightSpeed[]={0,42,87,127,167,213,255};
-static uint8_t leftSpeed[]={0,42,87,127,167,213,255};
+static uint8_t rightSpeed[]={0,50,80,127,175,205,255};
+static uint8_t leftSpeed[]={0,50,80,127,175,205,255};
 int8_t motor_currentSpeed[2]={0,0};
 int8_t motor_dirTurn=0;
 int8_t motor_dirTravel=0;
