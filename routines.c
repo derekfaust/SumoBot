@@ -31,6 +31,7 @@
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 5	// Number of times the bounds are seen before
 								// We give know it's not a glitch.
+#define SPOTTED_THRESHOLD 3		// Number of times something must be spotted before attacking
 #define SPINOFF_COUNT 2048		// Number of counts to execute a spinoff
 #define EVADE_COUNT 2048		// Number of counts to execute an evade maneuver
 #define BACKUP_COUNT 2048		// Number of counts to back away from edge
@@ -45,6 +46,7 @@ void routines_search(void){
 
 	// Initialize object detection variable
 	int8_t objDetected = 0;
+	int8_t oldobjDetected = 0;
 
 	// Copy travel direction
 	int8_t direction = motor_dirTravel;
@@ -58,56 +60,70 @@ void routines_search(void){
 		motor_setSpeed(3*direction,2*direction);
 	}
 
+	uint8_t spotted = 0;
 	
-	while (!objDetected){
+	while (spotted<SPOTTED_THRESHOLD){
 		// While no object is detected,
 		// Keep searching and switch directions when necessary
 
-		while(!qti_touchingBounds && !objDetected){
+		while(!qti_touchingBounds && spotted<SPOTTED_THRESHOLD){
 			// While no bounds or objects are detected
 
 			// Get sonar measurement
+			oldobjDetected = objDetected;
 			objDetected = sonar_getRegion();
+			
+			if(sonar_isNewDist(objDetected)){
+				if((objDetected==oldobjDetected) && objDetected){
+					// Check if the object is in the direction we're charging
+					// If it's not, count a miss.
+					spotted++;
+				}else{
+					spotted = 0;
+				}
+			}
 
 		}
 		
-		if (motor_dirTravel != 0){
-			// If we are actually moving in some direction
-			if (qti_touchingBounds == motor_dirTravel){
-				// If a boundary is detected in the direction of travel
-				// Reverse direction of travel and turning
-				motor_setSpeed(-motor_currentSpeed[1],-motor_currentSpeed[0]);
+		if(!objDetected){
+			if (motor_dirTravel != 0){
+				// If we are actually moving in some direction
+				if (qti_touchingBounds == motor_dirTravel){
+					// If a boundary is detected in the direction of travel
+					// Reverse direction of travel and turning
+					motor_setSpeed(-motor_currentSpeed[1],-motor_currentSpeed[0]);
 
-			}else if(qti_touchingBounds == -motor_dirTravel){
-				// If a boundary is detected opposite the direction of travel
-				// Then we are being pushed out of the ring
+				}else if(qti_touchingBounds == -motor_dirTravel){
+					// If a boundary is detected opposite the direction of travel
+					// Then we are being pushed out of the ring
 
-				// Perform routine in attempt to spin off
-				routines_spinOff(qti_touchingBounds);
+					// Perform routine in attempt to spin off
+					//routines_spinOff(qti_touchingBounds);
+				}
+			}else{
+				// If we are spinning
+				// Then switch spin direction
+				motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
 			}
-		}else{
-			// If we are spinning
-			// Then switch spin direction
-			motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
 		}
 	}
 
-	if(objDetected == -motor_dirTravel){
+	//if(objDetected == -motor_dirTravel){
 		// If the object is detected opposite the direction of travel
-			if (sonar_getDistance(0xFF)<MOMENTUM_SWITCH_DIST){
+			//if (sonar_getDistance(0xFF)<MOMENTUM_SWITCH_DIST){
 				// If the the opponent is to close to reverse direction
 				// Make a move to evade
-				routines_evade(objDetected);
+				//routines_evade(objDetected);
 
-			}else{
+			//}else{
 				// Switch direction and attack
-				routines_attack(objDetected);
-			}
-	}else{
+				//routines_attack(objDetected);
+			//}
+	//}else{
 		// The object is found in direction of travel, go get it.
 		routines_attack(objDetected);
 
-	}
+	//}
 		
 }
 
@@ -127,6 +143,7 @@ void routines_attack(int8_t direction){
 			// Check if the object is in the direction we're charging
 			// If it's not, count a miss.
 			missCounter++;
+			indicator_greenFlash(50);
 		}
 		if(qti_touchingBounds){
 			// Increment the bound counter if we see a bound
@@ -140,12 +157,12 @@ void routines_attack(int8_t direction){
 		if(qti_touchingBounds==direction){
 			// If a bound was touched on the pushing side
 			// Opponent should be out of the ring
-			routines_victoryDance(-direction);
+			//routines_victoryDance(-direction);
 
 		}else if(qti_touchingBounds==-direction){
 			// If a bound was touched on the back side
 			// We're being pushed out, try to spin out.
-			routines_spinOff(qti_touchingBounds);
+			//routines_spinOff(qti_touchingBounds);
 
 		}
 	}
