@@ -33,6 +33,8 @@ static uint8_t leftSpeed[]={0,50,80,127,175,205,255};
 int8_t motor_currentSpeed[2]={0,0};
 int8_t motor_dirTurn=0;
 int8_t motor_dirTravel=0;
+int8_t motor_dirTurnA=-1;
+int8_t motor_dirTravelA=-1;
 
 
 /* Begin Global Functions here
@@ -118,18 +120,22 @@ void motor_setSpeed(int8_t speed0, int8_t speed1){
 		// If left is less than right
 		// Turning Left
 		motor_dirTurn = -1;
+		motor_dirTurnA = -1;
 	}else if(diff>0){
 		// If left is more than right
 		// Turning Right
 		motor_dirTurn = 1;
+		motor_dirTurnA = 1;
 	}
 	if(sum>0){
 		// If combined is more than zero
 		// Moving forward
 		motor_dirTravel = 1;
+		motor_dirTravelA = 1;
 	}else if(sum<0){
 		// If combined is less than zero
 		// Moving Backwards
 		motor_dirTravel = -1;
+		motor_dirTravelA = -1;
 	}
 }

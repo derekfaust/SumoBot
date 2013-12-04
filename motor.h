@@ -18,6 +18,8 @@
 // Global Variables
 extern int8_t motor_dirTurn;
 extern int8_t motor_dirTravel;
+extern int8_t motor_dirTurnA;
+extern int8_t motor_dirTravelA;
 extern int8_t motor_currentSpeed[2];
 
 // Function to initialize PWM
