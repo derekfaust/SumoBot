@@ -49,7 +49,7 @@ void routines_search(void){
 	int8_t oldobjDetected = 0;
 
 	// Copy travel direction
-	int8_t direction = motor_dirTravel;
+	int8_t direction = motor_dirTravelA;
 
 	// Determine which direction to move
 	if(motor_dirTurnA == -1){
