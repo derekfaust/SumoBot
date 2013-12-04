@@ -143,7 +143,6 @@ void routines_attack(int8_t direction){
 			// Check if the object is in the direction we're charging
 			// If it's not, count a miss.
 			missCounter++;
-			indicator_greenFlash(50);
 		}
 		if(qti_touchingBounds){
 			// Increment the bound counter if we see a bound
