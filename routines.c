@@ -26,8 +26,8 @@
 #include "indicator.h"		// For LED and buzzer control
 
 // Constants
-#define MOMENTUM_SWITCH_DIST 5	// Distance required to reverse momentum
-#define MAX_TRACKING_MISSES 5	// Number of times the object isn't seen before
+#define MOMENTUM_SWITCH_DIST 8	// Distance required to reverse momentum
+#define MAX_TRACKING_MISSES 3	// Number of times the object isn't seen before
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 5	// Number of times the bounds are seen before
 								// We give know it's not a glitch.
