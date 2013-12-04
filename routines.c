@@ -31,9 +31,9 @@
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 5	// Number of times the bounds are seen before
 								// We give know it's not a glitch.
-#define SPINOFF_COUNT 1024		// Number of counts to execute a spinoff
-#define EVADE_COUNT 1024		// Number of counts to execute an evade maneuver
-#define BACKUP_COUNT 1024		// Number of counts to back away from edge
+#define SPINOFF_COUNT 2048		// Number of counts to execute a spinoff
+#define EVADE_COUNT 2048		// Number of counts to execute an evade maneuver
+#define BACKUP_COUNT 2048		// Number of counts to back away from edge
 
 /* Begin Global Functions here
  * ==========================
