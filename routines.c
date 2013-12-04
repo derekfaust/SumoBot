@@ -154,7 +154,7 @@ void routines_attack(int8_t direction){
 // Avoid being rear-ended if we don't have time to reverse momentum
 void routines_evade(int8_t direction){
 	// Determine how to execute the spin
-	if(motor_dirTurn == 1){
+	if(motor_dirTurn == -1){
 		// If turning left, hold left motor back slightly
 		// to make the turn sharper
 		motor_setSpeed(direction,3*direction);
@@ -178,7 +178,7 @@ void routines_evade(int8_t direction){
 void routines_spinOff(int8_t direction){
 
 	// Determine how to execute the spin
-	if(motor_dirTurn == 1){
+	if(motor_dirTurn == -1){
 		// If turning left, set left motor back slightly
 		// and set right to max
 		motor_setSpeed(-direction,3*direction);
