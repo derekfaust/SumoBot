@@ -56,11 +56,11 @@ ISR(PCINT2_vect){
 			// Turn Motors off
 			motor_setSpeed(0,0);
 
-			//while (1){
-				//Blink LED indefinitely
-				//indicator_redFlash(250);
-				//_delay_ms(250);
-			//}
+			while (1){
+				// Blink LED indefinitely
+				indicator_redFlash(250);
+				_delay_ms(250);
+			}
 		}
 	}
 	qti_touchingBounds = 0;
