@@ -138,16 +138,29 @@ void routines_attack(int8_t direction){
 	uint8_t boundCounter = 0;
 	
 	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
-		// While we haven't lost sight of the opponent 5 or more times
-		if((sonar_getRegion()!=direction) && sonar_isNewDist(direction)){
-			// Check if the object is in the direction we're charging
-			// If it's not, count a miss.
-			missCounter++;
+		// While we haven't lost sight more consecutive a number times
+		
+		// Look for consecutive misses
+		if sonar_isNewDist(direction){
+			// If there is a new distance measurement
+			if(sonar_getRegion()!=direction){
+				// Check if the object is in the direction we're charging
+				// If it's not, count a miss.
+				missCounter++;
+			}else{
+				// If it is,reset the miss counter.
+				missCounter = 0;
+			}
 		}
+
+		// Looking for consecutive touchingBounds
 		if(qti_touchingBounds){
 			// Increment the bound counter if we see a bound
 			// This is meant to stray signals
 			boundCounter++;
+		}else{
+			// Reset the bound counter if no bound is found
+			boundCounter = 0;
 		}
 			
 	}
