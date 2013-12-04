@@ -54,10 +54,10 @@ void routines_search(void){
 	// Determine which direction to move
 	if(motor_dirTurnA == -1){
 		// If turning left, keep turning left
-		motor_setSpeed(-3*direction,3*direction);
+		motor_setSpeed(-3,3);
 	}else{
 		// If turning right, keep turning right
-		motor_setSpeed(3*direction,-3*direction);
+		motor_setSpeed(3,-3);
 	}
 
 	uint8_t spotted = 0;
