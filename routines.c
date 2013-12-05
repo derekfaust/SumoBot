@@ -153,29 +153,6 @@ void routines_attack(int8_t direction){
 	}
 }
 
-// Avoid being rear-ended if we don't have time to reverse momentum
-void routines_evade(int8_t direction){
-	// Determine how to execute the spin
-	if(motor_dirTurn == -1){
-		// If turning left, hold left motor back slightly
-		// to make the turn sharper
-		motor_setSpeed(direction,3*direction);
-	}else{
-		// If turning right, hold right motor back slightly
-		// to make the turn sharper
-		motor_setSpeed(3*direction,direction);
-	}
-
-	// Wait the correct amount of time.
-	uint16_t spinCounter = 0;
-	for(spinCounter=0; spinCounter<EVADE_COUNT; spinCounter++){
-		// For the specified number of counts, complete the turn.
-
-		//Keep polling sensors so we have current data when we're done
-		sonar_getDistance(0);
-	}
-}
-
 // Torero move to avoid being pushed out
 void routines_spin(int8_t direction){
 
