@@ -142,12 +142,12 @@ void routines_attack(int8_t direction){
 		if(qti_touchingBounds==direction){
 			// If a bound was touched on the pushing side
 			// Opponent should be out of the ring
-			routines_victoryDance(-direction);
+			routines_victoryBack(-direction);
 
 		}else if(qti_touchingBounds==-direction){
 			// If a bound was touched on the back side
 			// We're being pushed out, try to spin out.
-			routines_spinOff(qti_touchingBounds);
+			routines_spin(qti_touchingBounds);
 
 		}
 	}
@@ -177,7 +177,7 @@ void routines_evade(int8_t direction){
 }
 
 // Torero move to avoid being pushed out
-void routines_spinOff(int8_t direction){
+void routines_spin(int8_t direction){
 
 	// Determine how to execute the spin
 	if(motor_dirTurn == -1){
@@ -200,8 +200,8 @@ void routines_spinOff(int8_t direction){
 	}
 }
 
-// Do a victory dance
-void routines_victoryDance(int8_t direction){
+// Back off and continue to search, in case of false alarm
+void routines_victoryBack(int8_t direction){
 	
 	// Backup from the edge of the circle
 	motor_setSpeed(3*direction, 3*direction);
