@@ -15,12 +15,12 @@
 // Include standard data types
 #include <stdint.h>
 
-// Global Variables
-extern int8_t motor_dirTurn;
-extern int8_t motor_dirTravel;
-extern int8_t motor_dirTurnA;
-extern int8_t motor_dirTravelA;
-extern int8_t motor_currentSpeed[2];
+// Initialize Global Variables
+extern int8_t motor_dirTurn;			// Current direction of turn
+extern int8_t motor_dirTravel;			// Current direction of travel
+extern int8_t motor_dirTurnA;			// Current/last direction of turn (non-zero)
+extern int8_t motor_dirTravelA;			// Current/last direction of travel (non-zero)
+extern int8_t motor_currentSpeed[2];	// Current speed setting of motors
 
 // Function to initialize PWM
 void motor_init(void);

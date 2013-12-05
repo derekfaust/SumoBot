@@ -33,12 +33,11 @@ static uint8_t rightSpeed[]={0,50,80,127,175,205,255};
 static uint8_t leftSpeed[]={0,50,80,127,175,205,255};
 
 // Global Variables
-// Current speed setting of the motor
-int8_t motor_currentSpeed[2]={0,0};
+int8_t motor_currentSpeed[2]={0,0};	// Current speed setting of the motor
 int8_t motor_dirTurn=0;				// Current direction of turn
 int8_t motor_dirTravel=0;			// Current direction of movement
 int8_t motor_dirTurnA=-1;			// Current/last direction of turn (non-zero)
-int8_t motor_dirTravelA=-1;			// Current/last direction of turn (non-zero)
+int8_t motor_dirTravelA=-1;			// Current/last direction of travel (non-zero)
 
 
 /* Begin Global Functions here
