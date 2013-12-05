@@ -39,9 +39,9 @@ static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
  *
  */
 
-ISR(PCINT0_vect){
 // ISR to record the value of the signal
 // Hard-coded to use PCINT0 and TIMER1
+ISR(PCINT0_vect){
 	
 	//Stopping interrupts not necessary b.c interrupts stop before ISR
 	uint16_t timervalue = TCNT1;	//Record timer value
@@ -76,8 +76,8 @@ ISR(PCINT0_vect){
 	}
 }
 
-uint16_t getTimer(void){
 // Function to read the timer value
+uint16_t getTimer(void){
 
 	uint8_t sreg;	// Initialize variables
 	uint16_t time;
@@ -88,8 +88,8 @@ uint16_t getTimer(void){
 	return time;	// Return timer value
 }
 
-void pollSonar(void){
 // Polls the next sensor if none are polling
+void pollSonar(void){
 
 	if ((pulseReceived == NUM_SONARS)||(getTimer()>MAX_PULSE)){
 		// If no sonars are polling or if time has been exceeded
@@ -112,8 +112,8 @@ void pollSonar(void){
 	}
 }
 
-void distToByte(void){
 // Converts 16-bit distances to 8-bit distances
+void distToByte(void){
 
 	// Initialize iterator
 	uint8_t iter_sonar;
@@ -131,8 +131,8 @@ void distToByte(void){
  *
  */
 
-void sonar_init(void){
 //Initializes sonar interrupts and timer
+void sonar_init(void){
 	
 	//Initialize PCINT0
 	PCICR |= (1<<0);
@@ -142,8 +142,8 @@ void sonar_init(void){
 	TCCR1B |= (1<<1|1<<0); TCCR1B &= ~(1<<2);
 }
 
-uint8_t sonar_isNewDist(int8_t direction){
 // Returns true if there is a new distance measurement in a given direction.
+uint8_t sonar_isNewDist(int8_t direction){
 	
 	// Initialize the flag variable to send
 	uint8_t newFlag;
@@ -171,11 +171,8 @@ uint8_t sonar_isNewDist(int8_t direction){
 	}
 }
 
-uint8_t sonar_getDistance(uint8_t sonarnum){
 // Trigger polling and return distance of object
-/* Distance is returned as a value from 0 to 145
- * with a resolution of 1.73 inches.
- */
+uint8_t sonar_getDistance(uint8_t sonarnum){
 	
 	//Trigger sonar poll
 	pollSonar();
@@ -223,15 +220,19 @@ int8_t sonar_getRegion(void){
 	// Convert raw values to bytes
 	distToByte();
 
+
 	// Map which sonars detected an object
-	uint8_t detectMap=0;	// Map of hits
-	uint8_t i;				// Iteration variable
-	for(i=0;i<NUM_SONARS;i++){
+	uint8_t detectMap=0;		// Map of hits
+	uint8_t i;					// Iteration variable
+
+	// Iterate over all sonars
+	for(i=0;i<NUM_SONARS;i++){			
 		if(dist8[i]<DETECT_THRESHOLD){
 			// Set bit if sonar detected something
 			detectMap |= (1<<i);
 		}
 	}
+
 
 	// Translate hits on individual sensors to a region
 	int8_t region=0;		// Initialize region variable

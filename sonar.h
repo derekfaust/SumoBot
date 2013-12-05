@@ -24,10 +24,13 @@ uint8_t sonar_isNewDist(int8_t direction);
 // Function to retrieve distance value from one sonar
 // or the closest from all of them
 uint8_t sonar_getDistance(uint8_t sonarnum);
+/* Distance is returned as a value from 0 to 145
+ * with a resolution of 1.73 inches.
+ */
 
 // Function to get which region and object is detected in.
 int8_t sonar_getRegion();
-/* region 	[-1,1] or 127:
+/* region 	[-1,1]:
  * Nothing	0
  * Front	1
  * Back		-1
