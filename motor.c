@@ -27,14 +27,18 @@
  * OCR2B	Right	Reverse
  */
 
-//Define variables
+// Local variables
+// OCR values for motors
 static uint8_t rightSpeed[]={0,50,80,127,175,205,255};
 static uint8_t leftSpeed[]={0,50,80,127,175,205,255};
+
+// Global Variables
+// Current speed setting of the motor
 int8_t motor_currentSpeed[2]={0,0};
-int8_t motor_dirTurn=0;
-int8_t motor_dirTravel=0;
-int8_t motor_dirTurnA=-1;
-int8_t motor_dirTravelA=-1;
+int8_t motor_dirTurn=0;				// Current direction of turn
+int8_t motor_dirTravel=0;			// Current direction of movement
+int8_t motor_dirTurnA=-1;			// Current/last direction of turn (non-zero)
+int8_t motor_dirTravelA=-1;			// Current/last direction of turn (non-zero)
 
 
 /* Begin Global Functions here
@@ -51,7 +55,7 @@ void motor_init(void){
 	// Reset OCR0B when high, set when low
 	TCCR0A |= (1<<COM0B1);
 	TCCR2A |= (1<<COM2B1);
-	/* This is set up such that OCRnB should always be lower
+	/* With these settings OCRnB should always be lower
 	 * than OCRnA to allow time for the transistors to switch
 	 */
 
@@ -73,13 +77,12 @@ void motor_init(void){
 
 void motor_setSpeed(int8_t speed0, int8_t speed1){
 // Function to set motor speed
-	// Left Motor
 
 	// Find the setpt from the array
 	uint8_t setpt0 = leftSpeed[speed0+3];
 	uint8_t setpt1 = rightSpeed[speed1+3];
 	
-	// Check to make sure register won't overflow
+	// Check to make sure register won't over-/under- flow
 	if(setpt0 > 0xFF-DEAD_TIME){
 		// If setpt would overflow on the high side
 		// Then move setpt to max value
@@ -89,7 +92,6 @@ void motor_setSpeed(int8_t speed0, int8_t speed1){
 		// Then move setpt to min value
 		setpt0 = DEAD_TIME;
 	}
-	
 	if(setpt1 > 0xFF-DEAD_TIME){
 		// If setpt would overflow on the high side
 		// Then move setpt to max value
@@ -100,22 +102,30 @@ void motor_setSpeed(int8_t speed0, int8_t speed1){
 		setpt1 = DEAD_TIME;
 	}
 	
-	// Set the motor speed
+	// Set the motor speed to the PWM control registers
 	OCR0A = setpt0+DEAD_TIME;
 	OCR0B = setpt0-DEAD_TIME;
-	
 	OCR2A = setpt1+DEAD_TIME;
 	OCR2B = setpt1-DEAD_TIME;
 	
-	// Record the speed values
+	// Record the speed values to the global variables
 	motor_currentSpeed[0] = speed0;
 	motor_currentSpeed[1] = speed1;
 
-	// Record direction
-	motor_dirTurn = 0;
-	motor_dirTravel = 0;
-	int8_t diff = speed0-speed1;
-	int8_t sum = speed0+speed1;
+
+	// Determine and record direction
+	motor_dirTurn = 0;			// Set to zero in case diff is 0
+	motor_dirTravel = 0;		// Set to zero in case sum is 0
+	/* dir____A variables are not reset to zero, because
+	 * if the new value is zero, they should store the old value,
+	 * so we know the latest direction the robot was turning/moving.
+	 */
+
+	// Perform Calculation
+	int8_t diff = speed0-speed1;	// Calculate difference
+	int8_t sum = speed0+speed1;		// Calculate sum
+
+	// Translate sum and difference into directions
 	if (diff<0){
 		// If left is less than right
 		// Turning Left
