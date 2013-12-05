@@ -7,15 +7,15 @@
  * Derek Faust, Nicole Panega, Abdullah Sayeem
  */
 
-// Include general I/O functionality
-#include <avr/io.h>
+// Include standard libraries
+#include <avr/io.h>		// General I/O functionality
 
 // Include custom modules that need to be initialized
-#include "routines.h"
-#include "indicator.h"
-#include "motor.h"
-#include "qti.h"
-#include "sonar.h"
+#include "routines.h"	// Movements and associated logic
+#include "indicator.h"	// Triggering indicators
+#include "motor.h"		// Controlling motors
+#include "qti.h"		// Detecting boundaries
+#include "sonar.h"		// Detecting objects
 
 // Main code loop that never exits
 int main(void){
@@ -27,8 +27,8 @@ int main(void){
 	sonar_init();
 
     while(1){
-		// Keep performing the search routine, which leads
-		// into other necessary routines.
+		// Keep performing the search routine,
+		// which leads into other necessary routines.
         routines_search();
     }
 }
