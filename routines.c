@@ -30,8 +30,9 @@
 #define MAX_TRACKING_MISSES 8	// Number of times the object isn't seen before
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 2	// Number of times the bounds are seen before
-								// We give know it's not a glitch.
-#define SPOTTED_THRESHOLD 3		// Number of times something must be spotted before attacking
+								// we know it's not a glitch.
+#define SPOTTED_THRESHOLD 3		// Number of times something must be spotted
+								// before attacking
 #define SPINOFF_COUNT 5			// Number of counts to execute a spinoff
 #define EVADE_COUNT 5			// Number of counts to execute an evade maneuver
 #define BACKUP_COUNT 5			// Number of counts to back away from edge
@@ -60,6 +61,7 @@ void routines_search(void){
 		motor_setSpeed(3,-3);
 	}
 
+	// Reset spotting counter
 	uint8_t spotted = 0;
 	
 	while (spotted<SPOTTED_THRESHOLD){
@@ -69,16 +71,20 @@ void routines_search(void){
 		while(!qti_touchingBounds && spotted<SPOTTED_THRESHOLD){
 			// While no bounds or objects are detected
 
-			// Get sonar measurement
+			// Save last measurement
 			oldobjDetected = objDetected;
+			// Get new sonar measurement
 			objDetected = sonar_getRegion();
 			
 			if(sonar_isNewDist(objDetected)){
+				// If there is new sonar data for the correct direction
 				if((objDetected==oldobjDetected) && objDetected){
 					// Check if the object is in the direction we're charging
-					// If it's not, count a miss.
+					// If it's not, count a sighting.
 					spotted++;
 				}else{
+					// If the object isn't there
+					// reset the sighting counter
 					spotted = 0;
 				}
 			}
@@ -103,12 +109,12 @@ void routines_attack(int8_t direction){
 	// Charge the opponent
 	motor_setSpeed(3*direction,3*direction);
 
-	// Initialize the variable showing where the object was seen
+	// Initialize variables to determine when to give up
 	uint8_t missCounter = 0;
 	uint8_t boundCounter = 0;
 	
 	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
-		// While we haven't lost sight more consecutive a number times
+		// While we haven't lost sight more than ## consecutive times
 	
 		// Poll the sonar
 		sonar_getRegion();
@@ -143,12 +149,10 @@ void routines_attack(int8_t direction){
 			// If a bound was touched on the pushing side
 			// Opponent should be out of the ring
 			routines_victoryBack(-direction);
-
 		}else if(qti_touchingBounds==-direction){
 			// If a bound was touched on the back side
 			// We're being pushed out, try to spin out.
 			routines_spin(qti_touchingBounds);
-
 		}
 	}
 }
@@ -169,6 +173,7 @@ void routines_spin(int8_t direction){
 
 	// Wait the correct amount of time.
 	uint16_t spinCounter = 0;
+
 	for(spinCounter=0; spinCounter<SPINOFF_COUNT; spinCounter++){
 		// For the specified number of counts, complete the turn.
 
@@ -194,7 +199,7 @@ void routines_victoryBack(int8_t direction){
 
 	// For the specified time, back up
 	for(i_backup=0; i_backup<BACKUP_COUNT; i_backup++){
-		_delay_us(5);
+		_delay_us(5);				// Slow down the loop
 		indicator_beep(); 			// Beep while backing up
 		sonar_getRegion();			// Refresh sonar measurement
 	}
