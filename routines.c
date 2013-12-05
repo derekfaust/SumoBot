@@ -86,25 +86,9 @@ void routines_search(void){
 		}
 		
 		if(!objDetected){
-			if (motor_dirTravel != 0){
-				// If we are actually moving in some direction
-				if (qti_touchingBounds == motor_dirTravel){
-					// If a boundary is detected in the direction of travel
-					// Reverse direction of travel and turning
-					motor_setSpeed(-motor_currentSpeed[1],-motor_currentSpeed[0]);
-
-				}else if(qti_touchingBounds == -motor_dirTravel){
-					// If a boundary is detected opposite the direction of travel
-					// Then we are being pushed out of the ring
-
-					// Perform routine in attempt to spin off
-					//routines_spinOff(qti_touchingBounds);
-				}
-			}else{
-				// If we are spinning
-				// Then switch spin direction
-				motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
-			}
+			// If a bound was hit,
+			// Then switch spin direction
+			motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
 		}
 	}
 
