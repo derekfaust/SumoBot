@@ -109,9 +109,12 @@ void routines_attack(int8_t direction){
 	
 	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
 		// While we haven't lost sight more consecutive a number times
-		
+	
+		// Poll the sonar
+		sonar_getRegion();
+
 		// Look for consecutive misses
-		if sonar_isNewDist(direction){
+		if (sonar_isNewDist(direction)){
 			// If there is a new distance measurement
 			if(sonar_getRegion()!=direction){
 				// Check if the object is in the direction we're charging
