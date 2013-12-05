@@ -13,7 +13,6 @@
 // Include custom modules that need to be initialized
 #include "routines.h"
 #include "indicator.h"
-#include "infrared.h"
 #include "motor.h"
 #include "qti.h"
 #include "sonar.h"
@@ -23,7 +22,6 @@ int main(void){
 	
 	// Initialize modules
 	indicator_init();
-	infrared_init();
 	motor_init();
 	qti_init();
 	sonar_init();
