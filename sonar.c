@@ -30,7 +30,7 @@ static volatile uint16_t distance[NUM_SONARS];	// Record raw timer values for so
 static uint8_t dist8[NUM_SONARS];				// 8-bit distances values for sonars
 static volatile uint8_t newDist;				// Flags indicating a new measurement
 static volatile uint8_t pulseStarted;			// Record if input pulse has started
-static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
+static volatile uint8_t pulseReceived;			// Record how many pulses are received
 static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
 
 
