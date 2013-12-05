@@ -174,6 +174,9 @@ void routines_spin(int8_t direction){
 
 		//Keep polling sensors so we have current data when we're done
 		sonar_getDistance(0);
+
+		// Add a delay so the loop doesn't execute ridiculously fast
+		_delay_us(5);
 	}
 }
 
