@@ -13,7 +13,7 @@
 
 // Include standard headers
 #include <avr/io.h>			// For general I/O
-#include <util/delay.h>		// For delay
+#include <util/delay.h>		// For delay (for indicators)
 #include <avr/interrupt.h>	// For interrupts
 #include <stdint.h>			// For data types
 
@@ -22,7 +22,7 @@
 #include "indicator.h"		// Indicator control
 #include "qti.h"			// Own header file
 
-// Define Connections
+// Define Connections on Port D
 #define CENTER_QTI 2
 #define FRONT_QTI 4
 #define BACK_QTI 7
@@ -35,8 +35,9 @@
  * PD7	Back
  */
 
-// Variable definitions
-volatile int8_t qti_touchingBounds=0;
+// Global Variable definitions
+volatile int8_t qti_touchingBounds=0;	// Flag indicating which end of the
+										// robot is out of bounds
 
 /* Begin Internal Functions Here
  * =============================
@@ -83,10 +84,13 @@ void qti_init(void){
 
 	// Ensure that pins are set to input
 	DDRD &= ~((1<<CENTER_QTI)|(1<<FRONT_QTI)|(1<<BACK_QTI));
+
 	// Enable PCINT2
 	PCICR |= (1<<CENTER_QTI);
+	
 	// Allow first 3 pins to trigger interrupt
 	PCMSK2 |= ((1<<CENTER_QTI)|(1<<FRONT_QTI)|(1<<BACK_QTI));
+	
 	// Enable interrupts globally
 	sei();
 }

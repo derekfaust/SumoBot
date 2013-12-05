@@ -15,11 +15,19 @@
 // Include standard libraries
 #include <stdint.h>			// For data types
 
-//Define variables
+//Define global variables
 extern volatile int8_t qti_touchingBounds;
-/* Location
- * Front	1
+/* Variable indicating which end of the robot is touching
+ * the out-of-bounds line.
+ *
+ * This variable is updated by a pin-change interrupt on any of the QTI sensors
+
+ * Output Information
+ * ------------------
+ * Front	 1
  * Back		-1
+ * Both		 1
+ * Neither	 0
  */
 
 // Function to initialize all QTI sensors.
