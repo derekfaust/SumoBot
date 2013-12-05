@@ -188,17 +188,17 @@ void routines_victoryBack(int8_t direction){
 
 	// Keep backing up until the count is done
 	uint16_t i_backup;		// Initialize iterator
+	
+	// Turn on the green LED
+	indicator_greenSet(1);
+
+	// For the specified time, back up
 	for(i_backup=0; i_backup<BACKUP_COUNT; i_backup++){
 		_delay_us(5);
+		indicator_beep(); 			// Beep while backing up
+		sonar_getRegion();			// Refresh sonar measurement
 	}
 
-	// Start spinning around
-	motor_setSpeed(1,-1);
-
-	while(1){
-		indicator_beep(); 			// Beep
-		_delay_ms(200);				// Wait
-		indicator_greenFlash(50);	// Flash
-		_delay_ms(200);				// Wait
-	}								// Repeat
+	// Turn off the green LED
+	indicator_greenSet(0);
 }
