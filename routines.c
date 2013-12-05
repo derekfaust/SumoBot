@@ -27,14 +27,14 @@
 
 // Constants
 #define MOMENTUM_SWITCH_DIST 8	// Distance required to reverse momentum
-#define MAX_TRACKING_MISSES 3	// Number of times the object isn't seen before
+#define MAX_TRACKING_MISSES 8	// Number of times the object isn't seen before
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 2	// Number of times the bounds are seen before
 								// We give know it's not a glitch.
 #define SPOTTED_THRESHOLD 3		// Number of times something must be spotted before attacking
-#define SPINOFF_COUNT 2048		// Number of counts to execute a spinoff
-#define EVADE_COUNT 2048		// Number of counts to execute an evade maneuver
-#define BACKUP_COUNT 2048		// Number of counts to back away from edge
+#define SPINOFF_COUNT 5			// Number of counts to execute a spinoff
+#define EVADE_COUNT 5			// Number of counts to execute an evade maneuver
+#define BACKUP_COUNT 5			// Number of counts to back away from edge
 
 /* Begin Global Functions here
  * ==========================
