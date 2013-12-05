@@ -142,12 +142,12 @@ void routines_attack(int8_t direction){
 		if(qti_touchingBounds==direction){
 			// If a bound was touched on the pushing side
 			// Opponent should be out of the ring
-			//routines_victoryDance(-direction);
+			routines_victoryDance(-direction);
 
 		}else if(qti_touchingBounds==-direction){
 			// If a bound was touched on the back side
 			// We're being pushed out, try to spin out.
-			//routines_spinOff(qti_touchingBounds);
+			routines_spinOff(qti_touchingBounds);
 
 		}
 	}
