@@ -190,11 +190,15 @@ uint8_t sonar_getDistance(uint8_t sonarnum){
 
 	}else{
 		// Otherwise, return the smallest value
-		// Note: this function is significantly slower as
-		// 16-bit variables must be compared.
+		// Note: This function is significantly slower as 
+		//       all the variables must be compared.
 
-		uint8_t iter_sonar;				// Initialize iteration variable
-		uint8_t minDist = dist8[0];		// Initialize compare variable
+		// Convert raw values to bytes
+		distToByte();
+
+		// Initialize variables
+		uint8_t iter_sonar;				// Iteration variable
+		uint8_t minDist = dist8[0];		// Compare variable
 		
 		// Compare all sonar distances
 		for(iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
@@ -205,7 +209,7 @@ uint8_t sonar_getDistance(uint8_t sonarnum){
 			}
 		}
 
-		// Return the value divided by 32 so it fits in one byte
+		// Return the smallest value 
 		return minDist;
 	}
 }
