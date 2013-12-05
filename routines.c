@@ -27,14 +27,14 @@
 
 // Constants
 #define MOMENTUM_SWITCH_DIST 8	// Distance required to reverse momentum
-#define MAX_TRACKING_MISSES 3	// Number of times the object isn't seen before
+#define MAX_TRACKING_MISSES 8	// Number of times the object isn't seen before
 								// We give up and go back to searching
 #define MAX_TRACKING_BOUNDS 2	// Number of times the bounds are seen before
 								// We give know it's not a glitch.
 #define SPOTTED_THRESHOLD 3		// Number of times something must be spotted before attacking
-#define SPINOFF_COUNT 2048		// Number of counts to execute a spinoff
-#define EVADE_COUNT 2048		// Number of counts to execute an evade maneuver
-#define BACKUP_COUNT 2048		// Number of counts to back away from edge
+#define SPINOFF_COUNT 5			// Number of counts to execute a spinoff
+#define EVADE_COUNT 5			// Number of counts to execute an evade maneuver
+#define BACKUP_COUNT 5			// Number of counts to back away from edge
 
 /* Begin Global Functions here
  * ==========================
@@ -54,10 +54,10 @@ void routines_search(void){
 	// Determine which direction to move
 	if(motor_dirTurnA == -1){
 		// If turning left, keep turning left
-		motor_setSpeed(2*direction,3*direction);
+		motor_setSpeed(-3,3);
 	}else{
 		// If turning right, keep turning right
-		motor_setSpeed(3*direction,2*direction);
+		motor_setSpeed(3,-3);
 	}
 
 	uint8_t spotted = 0;
@@ -86,45 +86,15 @@ void routines_search(void){
 		}
 		
 		if(!objDetected){
-			if (motor_dirTravel != 0){
-				// If we are actually moving in some direction
-				if (qti_touchingBounds == motor_dirTravel){
-					// If a boundary is detected in the direction of travel
-					// Reverse direction of travel and turning
-					motor_setSpeed(-motor_currentSpeed[1],-motor_currentSpeed[0]);
-
-				}else if(qti_touchingBounds == -motor_dirTravel){
-					// If a boundary is detected opposite the direction of travel
-					// Then we are being pushed out of the ring
-
-					// Perform routine in attempt to spin off
-					//routines_spinOff(qti_touchingBounds);
-				}
-			}else{
-				// If we are spinning
-				// Then switch spin direction
-				motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
-			}
+			// If a bound was hit,
+			// Then switch spin direction
+			motor_setSpeed(-motor_currentSpeed[0],-motor_currentSpeed[1]);
 		}
 	}
 
-	//if(objDetected == -motor_dirTravel){
-		// If the object is detected opposite the direction of travel
-			//if (sonar_getDistance(0xFF)<MOMENTUM_SWITCH_DIST){
-				// If the the opponent is to close to reverse direction
-				// Make a move to evade
-				//routines_evade(objDetected);
+	// The object is found, go get it
+	routines_attack(objDetected);
 
-			//}else{
-				// Switch direction and attack
-				//routines_attack(objDetected);
-			//}
-	//}else{
-		// The object is found in direction of travel, go get it.
-		routines_attack(objDetected);
-
-	//}
-		
 }
 
 // Operate the robot in attack mode
@@ -139,9 +109,12 @@ void routines_attack(int8_t direction){
 	
 	while((missCounter<MAX_TRACKING_MISSES) && (boundCounter<MAX_TRACKING_BOUNDS)){
 		// While we haven't lost sight more consecutive a number times
-		
+	
+		// Poll the sonar
+		sonar_getRegion();
+
 		// Look for consecutive misses
-		if sonar_isNewDist(direction){
+		if (sonar_isNewDist(direction)){
 			// If there is a new distance measurement
 			if(sonar_getRegion()!=direction){
 				// Check if the object is in the direction we're charging
@@ -169,42 +142,19 @@ void routines_attack(int8_t direction){
 		if(qti_touchingBounds==direction){
 			// If a bound was touched on the pushing side
 			// Opponent should be out of the ring
-			//routines_victoryDance(-direction);
+			routines_victoryBack(-direction);
 
 		}else if(qti_touchingBounds==-direction){
 			// If a bound was touched on the back side
 			// We're being pushed out, try to spin out.
-			//routines_spinOff(qti_touchingBounds);
+			routines_spin(qti_touchingBounds);
 
 		}
 	}
 }
 
-// Avoid being rear-ended if we don't have time to reverse momentum
-void routines_evade(int8_t direction){
-	// Determine how to execute the spin
-	if(motor_dirTurn == -1){
-		// If turning left, hold left motor back slightly
-		// to make the turn sharper
-		motor_setSpeed(direction,3*direction);
-	}else{
-		// If turning right, hold right motor back slightly
-		// to make the turn sharper
-		motor_setSpeed(3*direction,direction);
-	}
-
-	// Wait the correct amount of time.
-	uint16_t spinCounter = 0;
-	for(spinCounter=0; spinCounter<EVADE_COUNT; spinCounter++){
-		// For the specified number of counts, complete the turn.
-
-		//Keep polling sensors so we have current data when we're done
-		sonar_getDistance(0);
-	}
-}
-
 // Torero move to avoid being pushed out
-void routines_spinOff(int8_t direction){
+void routines_spin(int8_t direction){
 
 	// Determine how to execute the spin
 	if(motor_dirTurn == -1){
@@ -224,28 +174,31 @@ void routines_spinOff(int8_t direction){
 
 		//Keep polling sensors so we have current data when we're done
 		sonar_getDistance(0);
+
+		// Add a delay so the loop doesn't execute ridiculously fast
+		_delay_us(5);
 	}
 }
 
-// Do a victory dance
-void routines_victoryDance(int8_t direction){
+// Back off and continue to search, in case of false alarm
+void routines_victoryBack(int8_t direction){
 	
 	// Backup from the edge of the circle
 	motor_setSpeed(3*direction, 3*direction);
 
 	// Keep backing up until the count is done
 	uint16_t i_backup;		// Initialize iterator
+	
+	// Turn on the green LED
+	indicator_greenSet(1);
+
+	// For the specified time, back up
 	for(i_backup=0; i_backup<BACKUP_COUNT; i_backup++){
 		_delay_us(5);
+		indicator_beep(); 			// Beep while backing up
+		sonar_getRegion();			// Refresh sonar measurement
 	}
 
-	// Start spinning around
-	motor_setSpeed(1,-1);
-
-	while(1){
-		indicator_beep(); 			// Beep
-		_delay_ms(200);				// Wait
-		indicator_greenFlash(50);	// Flash
-		_delay_ms(200);				// Wait
-	}								// Repeat
+	// Turn off the green LED
+	indicator_greenSet(0);
 }

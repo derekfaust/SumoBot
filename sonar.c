@@ -12,7 +12,7 @@
 #define F_CPU 16000000UL		// CPU Clock Frequency
 #endif
 #define NUM_SONARS 2			// Number of sonars
-#define DETECT_THRESHOLD 20		// Threshold for detecting an object
+#define DETECT_THRESHOLD 24		// Threshold for detecting an object
 								// [1.73 inch increments]
 #define MAX_PULSE 4625			// Maximum return pulse time
 
@@ -30,7 +30,7 @@ static volatile uint16_t distance[NUM_SONARS];	// Record raw timer values for so
 static uint8_t dist8[NUM_SONARS];				// 8-bit distances values for sonars
 static volatile uint8_t newDist;				// Flags indicating a new measurement
 static volatile uint8_t pulseStarted;			// Record if input pulse has started
-static volatile uint8_t pulseReceived;			// Record how many pulses are recieved
+static volatile uint8_t pulseReceived;			// Record how many pulses are received
 static uint8_t pinnum[] = {0,1};				// Specify the pin of each sonar
 
 
