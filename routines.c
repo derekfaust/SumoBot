@@ -92,23 +92,9 @@ void routines_search(void){
 		}
 	}
 
-	//if(objDetected == -motor_dirTravel){
-		// If the object is detected opposite the direction of travel
-			//if (sonar_getDistance(0xFF)<MOMENTUM_SWITCH_DIST){
-				// If the the opponent is to close to reverse direction
-				// Make a move to evade
-				//routines_evade(objDetected);
+	// The object is found, go get it
+	routines_attack(objDetected);
 
-			//}else{
-				// Switch direction and attack
-				//routines_attack(objDetected);
-			//}
-	//}else{
-		// The object is found in direction of travel, go get it.
-		routines_attack(objDetected);
-
-	//}
-		
 }
 
 // Operate the robot in attack mode
