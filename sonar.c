@@ -12,7 +12,7 @@
 #define F_CPU 16000000UL		// CPU Clock Frequency
 #endif
 #define NUM_SONARS 2			// Number of sonars
-#define DETECT_THRESHOLD 20		// Threshold for detecting an object
+#define DETECT_THRESHOLD 24		// Threshold for detecting an object
 								// [1.73 inch increments]
 #define MAX_PULSE 4625			// Maximum return pulse time
 
