@@ -115,8 +115,10 @@ void pollSonar(void){
 void distToByte(void){
 // Converts 16-bit distances to 8-bit distances
 
-	uint8_t iter_sonar;		// Initialize iterator
-	//For every sensor, convert it;s distance to one byte
+	// Initialize iterator
+	uint8_t iter_sonar;
+
+	//For every sensor, convert it's distance to one byte
 	for (iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
 		// Divide by 32 to convert to one byte.
 		dist8[iter_sonar] = (uint8_t)(distance[iter_sonar]>>5);
@@ -142,7 +144,11 @@ void sonar_init(void){
 
 uint8_t sonar_isNewDist(int8_t direction){
 // Returns true if there is a new distance measurement in a given direction.
+	
+	// Initialize the flag variable to send
 	uint8_t newFlag;
+	
+	// Based on direction, return the correct flag
 	switch (direction) {
 	case -1:
 		// If direction is behind, return back sensor value
@@ -163,7 +169,6 @@ uint8_t sonar_isNewDist(int8_t direction){
 		return newFlag;					// Return Value
 		break;
 	}
-
 }
 
 uint8_t sonar_getDistance(uint8_t sonarnum){
@@ -192,7 +197,7 @@ uint8_t sonar_getDistance(uint8_t sonarnum){
 		// 16-bit variables must be compared.
 
 		uint8_t iter_sonar;				// Initialize iteration variable
-		uint8_t minDist = dist8[0];	// Initialize compare variable
+		uint8_t minDist = dist8[0];		// Initialize compare variable
 		
 		// Compare all sonar distances
 		for(iter_sonar=0;iter_sonar<NUM_SONARS;iter_sonar++){
@@ -229,7 +234,9 @@ int8_t sonar_getRegion(void){
 	}
 
 	// Translate hits on individual sensors to a region
-	int8_t region=0;
+	int8_t region=0;		// Initialize region variable
+
+	// Based on detectMap, set region
 	switch (detectMap){
 		case (1<<0):
 			// Front Detect
@@ -244,5 +251,7 @@ int8_t sonar_getRegion(void){
 			region = 0;
 			break;
 	}
+
+	// Return the determined region
 	return region;
 }
